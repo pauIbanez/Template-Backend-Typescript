@@ -2,6 +2,7 @@
 
 import { model, Schema } from "mongoose";
 
+// This is the user schema used in the mongoDB database, if you change this schema, make sure to also change the types of the user data in the types folder.
 const UserSchema = new Schema(
   {
     information: {

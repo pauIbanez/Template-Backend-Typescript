@@ -1,5 +1,6 @@
 import { Document } from "mongoose";
 
+// This is a type for the expected object received from the database
 interface DatabaseUserData extends Document {
   _id?: string;
   id?: string;

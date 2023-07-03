@@ -1,6 +1,6 @@
+// This is a type for the user you want to manage internally, independent of the database schema
 interface UserData {
   id?: string;
-  _id?: string;
   information: {
     firstName: string;
     lastName: string;
@@ -12,10 +12,5 @@ interface UserData {
   isDisabled: boolean;
   resetPasswordOnLogin: boolean;
   toCompleteRegister: boolean;
-
-  organizationData: {
-    group: string;
-    roleId: string;
-  };
 }
 export default UserData;
