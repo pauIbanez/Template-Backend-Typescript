@@ -11,6 +11,10 @@ import {
 
 import DatabaseUserData from "../../../../types/userTypes/DatabaseUserData";
 import TokenPayload from "../../../../types/authTypes/TokenPayload";
+import {
+  userSessionDuration,
+  userSessionRefresh,
+} from "../../../../data/server-config";
 
 const login = async (req: Request, res: Response, next: NextFunction) => {
   const loginData: LoginData = req.body;
@@ -73,10 +77,11 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
 
     const tokenData: TokenPayload = {
       id: foundUser.id,
+      tokenRefreshTime: userSessionRefresh,
     };
 
     const newToken = jwt.sign(tokenData, process.env.TOKEN_SECRET, {
-      expiresIn: "2h",
+      expiresIn: userSessionDuration,
     });
     res.json({ token: newToken });
   } catch (error) {

@@ -1,4 +1,5 @@
 interface TokenPayload {
+  tokenRefreshTime: string;
   id: string;
 }
 
