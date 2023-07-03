@@ -3,7 +3,7 @@ import debug from "debug";
 import { NextFunction, Request, Response } from "express";
 
 import { buiildResponseError } from "../../../../data/errorObjects/responseErrors";
-import ControledError from "../../../../data/errorObjects/controledError";
+import ControledError from "../../../../data/errorObjects/ControledError";
 
 const debugToConsole = debug("backend-template:errorHandler"); // Debug section setup
 

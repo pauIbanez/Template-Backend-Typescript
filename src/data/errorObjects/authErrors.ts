@@ -1,5 +1,5 @@
 import { ErrorSeverety } from "../../types/errorTypes/ServerError";
-import ControledError from "./controledError";
+import ControledError from "./ControledError";
 
 export const getNoAuthHeaderError = (): ControledError =>
   new ControledError({
