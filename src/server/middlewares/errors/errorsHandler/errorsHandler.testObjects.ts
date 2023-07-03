@@ -2,7 +2,7 @@
 
 import chalk from "chalk";
 import { ErrorSeverety } from "../../../../types/errorTypes/ServerError";
-import ControledError from "../../../../data/errorObjects/controledError";
+import ControledError from "../../../../data/errorObjects/ControledError";
 
 export const uncontrolledError = {
   message: "Uncontrolled error",

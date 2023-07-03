@@ -1,6 +1,6 @@
 /* eslint-disable import/prefer-default-export */
 import { ErrorSeverety } from "../../types/errorTypes/ServerError";
-import ControledError from "./controledError";
+import ControledError from "./ControledError";
 
 export const getInvalidRegistrationDataError = (
   details: string

@@ -1,7 +1,7 @@
 import Joi from "joi";
 
 const loginData = Joi.object({
-  email: Joi.string().email().required(),
+  email: Joi.string().required(),
   password: Joi.string().required(),
   withOtp: Joi.boolean(),
 });
