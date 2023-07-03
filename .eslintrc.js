@@ -21,5 +21,6 @@ module.exports = {
     "@typescript-eslint/no-shadow": ["error"],
     "import/no-extraneous-dependencies": "off",
     "import/no-unresolved": "off",
+    "lines-between-class-members": "off",
   },
 };

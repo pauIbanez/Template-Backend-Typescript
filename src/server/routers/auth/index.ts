@@ -3,7 +3,7 @@ import login from "../../controllers/auth/login/login";
 import refreshToken from "../../controllers/auth/refreshToken/refreshToken";
 import tokenValidator from "../../middlewares/auth/tokenValidator/tokenValidator";
 import loginDataValidator from "../../middlewares/requestPayloadValidators/loginDataValidator/loginDataValidator";
-import { endpoints } from "../../../data/server-config";
+import { endpoints } from "../../../data/serverConfig/endpoints";
 
 // Router creation
 const router = express.Router();

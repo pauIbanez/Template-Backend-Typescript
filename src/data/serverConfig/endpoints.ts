@@ -3,6 +3,7 @@
 */
 
 export const authEndpoints = <const>{
+  prev: "/auth",
   login: "/login",
   refreshToken: "/refreshToken",
 };
