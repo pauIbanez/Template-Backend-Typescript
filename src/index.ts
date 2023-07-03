@@ -19,9 +19,9 @@ const connectionString = process.env.CONN_STRING;
 (async () => {
   try {
     debugInConsole(chalk.white("Starting server..."));
-    await startServer(port, app);
-    await connectToDB(connectionString);
+    await startServer(port, app); // Start the server
+    await connectToDB(connectionString); // start the DB connection
   } catch (error) {
-    debugInConsole(`Error: ${error.message}`);
+    debugInConsole(`Error: ${error.message}`); // Debug any startup failiures to the console
   }
 })();
