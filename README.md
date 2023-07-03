@@ -1,16 +1,26 @@
 # Template-Backend-Typescript
 
-Template backend REST api with Express and MongoDB
+This template crates a fully set up REST API built with express with full server, router and database connection (using mongoDB with mongoose).
+Most importantly this template includes full user support.
 
-### Features
+- MongoDB Database connection.
+- Created file structure.
+- User authentication with a boilerplate user schema.
+- Email service integration for user creation, verification and recovery.
+- Error handling.
+- 100% tested (unit and integration).
+- Automated scripts for build, start, development watch build and testing.
 
-- MongoDB Database connection
-- Created file structure
-- User authentication with a boilerplate user schema
-- Error handling
-- 100% tested (unit and integration)
-- Email services for user creation, verification and recovery
-- Automated scripts for build, start, development watch build and testing
+### Users
+
+The template has user support built-in, these are the features it contains:
+- User registration with email verification.
+- User login.
+- User login via OTP via email.
+- Password recovery.
+- User session auto-refresh.
+
+The user autentication is built with JsonWebToken. The standard token session is 2h, but this is customizable to your needs.
 
 ### Testing
 
