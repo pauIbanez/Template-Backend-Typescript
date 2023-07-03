@@ -1,21 +1,38 @@
+// This is a type for the user you want to manage internally, independent of the database schema
 interface UserData {
   id?: string;
-  _id?: string;
   information: {
     firstName: string;
     lastName: string;
     email: string;
     phoneNumber: string;
     picture: string;
+    username: string;
   };
 
   isDisabled: boolean;
   resetPasswordOnLogin: boolean;
-  toCompleteRegister: boolean;
+  isVerified: boolean;
+}
 
-  organizationData: {
-    group: string;
-    roleId: string;
+export interface CreatedUserData {
+  information: {
+    firstName?: string;
+    lastName?: string;
+    phoneNumber?: string;
+    email: string;
+    picture?: string;
+    username: string;
   };
+
+  credentials: {
+    email: string;
+    password?: string;
+    otpPassword?: string;
+    username: string;
+  };
+
+  isDisabled: boolean;
+  resetPasswordOnLogin: boolean;
 }
 export default UserData;

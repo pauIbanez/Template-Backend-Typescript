@@ -1,4 +1,4 @@
-const getAccountCreationEmail = (registrationToken: string) => `
+const getUserActivationEmail = (activationToken: string) => `
 
   <head>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -165,7 +165,7 @@ const getAccountCreationEmail = (registrationToken: string) => `
       <section class="welcome">
         <h1>Welcome to My Menu</h1>
         <p>You're all set. Now you can create beautifully-designed, healty menus for all your centers.</p>
-        <a href="http://localhost:3000/auth/register/${registrationToken}" class="login-button">LOG IN TO YOUR SUPERUSER</a>
+        <a href="http://localhost:3000/auth/register/${activationToken}" class="login-button">LOG IN TO YOUR SUPERUSER</a>
       </section>
       <section class="docs">
         <h2>Learn to use My Menu like a pro</h2>
@@ -209,4 +209,4 @@ const getAccountCreationEmail = (registrationToken: string) => `
 
 `;
 
-export default getAccountCreationEmail;
+export default getUserActivationEmail;

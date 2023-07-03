@@ -1,9 +1,8 @@
 /* eslint-disable import/prefer-default-export */
 
 import chalk from "chalk";
-import ServerError, {
-  ErrorSeverety,
-} from "../../../../types/errorTypes/ServerError";
+import { ErrorSeverety } from "../../../../types/errorTypes/ServerError";
+import ControledError from "../../../../data/errorObjects/controledError";
 
 export const uncontrolledError = {
   message: "Uncontrolled error",
@@ -19,7 +18,7 @@ export const expectedUncontrolledErrorResponse = {
   message: "Internal server error",
 };
 
-export const controlledError: ServerError = {
+export const controlledError = new ControledError({
   message: "Internal message",
   name: "TESTINGERROR",
   severety: ErrorSeverety.high,
@@ -28,7 +27,7 @@ export const controlledError: ServerError = {
   },
   statusCode: 400,
   messageToSend: "External message",
-};
+});
 
 export const expectedControlledErrorResponse = {
   error: true,

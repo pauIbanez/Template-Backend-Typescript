@@ -1,10 +1,16 @@
+import {
+  charactersOTP,
+  lengthOTP,
+} from "../../../../data/serverConfig/server-config";
+
+// This function creates a One Time Password based of the characters in the "charactersOTP" string and length found in server-config.
 const generateOTP = (): string => {
-  const characters =
-    "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
   let otp: string = "";
 
-  for (let i = 0; i < 10; i++) {
-    otp += characters.charAt(Math.floor(Math.random() * characters.length));
+  for (let i = 0; i < lengthOTP; i++) {
+    otp += charactersOTP.charAt(
+      Math.floor(Math.random() * charactersOTP.length)
+    );
   }
 
   return otp;

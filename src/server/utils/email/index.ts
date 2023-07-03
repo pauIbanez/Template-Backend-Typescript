@@ -3,7 +3,7 @@ import debug from "debug";
 import chalk from "chalk";
 import EmailData from "./types";
 
-const debugToConsole = debug("mymenu:mailService");
+const debugToConsole = debug("backend-template:mailService");
 
 const config = {
   service: "gmail",

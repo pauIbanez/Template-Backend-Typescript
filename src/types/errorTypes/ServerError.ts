@@ -9,8 +9,7 @@ interface ServerError extends Error {
   messageToSend?: string;
   statusCode?: number;
   extraData?: {
-    accountId?: string;
-    [x: string]: unknown;
+    [key: string]: unknown;
   };
   severety: ErrorSeverety;
 }
