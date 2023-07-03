@@ -26,7 +26,6 @@ describe("Given tokenValidator", () => {
       tokenValidator(req, res, next);
 
       expect(next).toHaveBeenCalledWith();
-      expect(res.locals.accountId).toBe(tokenPayload.accountId);
       expect(res.locals.userId).toBe(tokenPayload.id);
     });
   });

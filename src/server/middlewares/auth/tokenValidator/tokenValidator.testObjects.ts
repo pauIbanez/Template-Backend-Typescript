@@ -2,8 +2,8 @@ import jwt from "jsonwebtoken";
 import TokenPayload from "../../../../types/authTypes/TokenPayload";
 
 export const tokenPayload: TokenPayload = {
-  accountId: "622f00e91e85099995d63b07",
   id: "622f00e91e85099995d63b06",
+  tokenRefreshTime: 1,
 };
 
 export const getValidAuth = () => {

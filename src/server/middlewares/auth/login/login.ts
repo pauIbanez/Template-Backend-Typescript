@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from "express";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 import Users from "../../../../database/models/Users";
 import LoginData from "../../../../types/authTypes/loginData";
 import {
@@ -10,11 +9,6 @@ import {
 } from "../../../../data/errorObjects/userErrors";
 
 import DatabaseUserData from "../../../../types/userTypes/DatabaseUserData";
-import TokenPayload from "../../../../types/authTypes/TokenPayload";
-import {
-  userSessionDuration,
-  userSessionRefresh,
-} from "../../../../data/serverConfig/server-config";
 
 const login = async (req: Request, res: Response, next: NextFunction) => {
   const loginData: LoginData = req.body; // Grab the login data left in the body by the request validator.
