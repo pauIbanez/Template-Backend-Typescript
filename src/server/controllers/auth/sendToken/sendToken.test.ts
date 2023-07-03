@@ -1,5 +1,5 @@
-import refreshToken from "./refreshToken";
-import { tokenResponse, userId } from "./refreshToken.testObject";
+import sendToken from "./sendToken";
+import { tokenResponse, userId } from "./sendToken.testObject";
 
 describe("Given refreshToken", () => {
   describe("When it's called", () => {
@@ -11,7 +11,7 @@ describe("Given refreshToken", () => {
         json: jest.fn(),
       };
 
-      refreshToken(null, res);
+      sendToken(null, res);
 
       expect(res.json).toHaveBeenCalledWith(tokenResponse);
     });

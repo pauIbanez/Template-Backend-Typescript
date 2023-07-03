@@ -83,17 +83,22 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
         return;
       }
     }
-    // If every check is passed, write the payload with the id of the user and a token refresh time.
-    const tokenData: TokenPayload = {
-      id: foundUser.id,
-      tokenRefreshTime: userSessionRefresh,
-    };
 
-    // This created the token with the previously created payload.
-    const newToken = jwt.sign(tokenData, process.env.TOKEN_SECRET, {
-      expiresIn: userSessionDuration,
-    });
-    res.json({ token: newToken }); // Send the token as the response.
+    // If every check has passed write the user id in the res.locals object and go next.
+    res.locals.userId = foundUser.id;
+    next();
+
+    // // If every check is passed, write the payload with the id of the user and a token refresh time.
+    // const tokenData: TokenPayload = {
+    //   id: foundUser.id,
+    //   tokenRefreshTime: userSessionRefresh,
+    // };
+
+    // // This created the token with the previously created payload.
+    // const newToken = jwt.sign(tokenData, process.env.TOKEN_SECRET, {
+    //   expiresIn: userSessionDuration,
+    // });
+    // res.json({ token: newToken }); // Send the token as the response.
   } catch (error) {
     next(error); // If anything throws and error, pass it on to the next function.
   }

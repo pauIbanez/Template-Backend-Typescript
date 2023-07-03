@@ -6,19 +6,21 @@ import {
   userSessionRefresh,
 } from "../../../../data/server-config";
 
-const refreshToken = (req: Request, res: Response) => {
-  const { userId } = res.locals;
+const sendToken = (req: Request, res: Response) => {
+  const { userId } = res.locals; // Grab the userId from the res.locals object
 
+  // Create the new token payload
   const tokenData: TokenPayload = {
     id: userId,
     tokenRefreshTime: userSessionRefresh,
   };
 
+  // Create the token with the created payload
   const newToken = jwt.sign(tokenData, process.env.TOKEN_SECRET, {
     expiresIn: userSessionDuration,
   });
 
-  res.json({ token: newToken });
+  res.json({ token: newToken }); // send the token as the response
 };
 
-export default refreshToken;
+export default sendToken;
