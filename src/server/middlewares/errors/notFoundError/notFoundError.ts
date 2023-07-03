@@ -1,8 +1,11 @@
 import { Request, Response } from "express";
-import { getNotFoundError } from "../../../../data/errorObjects/notFoundError";
 
 const notFoundError = (_req: Request, res: Response) => {
-  const notFoundErrorResponse = getNotFoundError();
+  const notFoundErrorResponse = {
+    error: true,
+    code: 404,
+    message: "Resource not found",
+  };
 
   res.status(404).json(notFoundErrorResponse);
 };

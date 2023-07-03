@@ -1,6 +1,5 @@
-import { getNotFoundError } from "../../../../data/errorObjects/notFoundError";
 import notFoundError from "./notFoundError";
-import { expectedStatus } from "./notFoundError.testObjects";
+import { expectedStatus, testNotFoundError } from "./notFoundError.testObjects";
 
 describe("Given notFoundError", () => {
   describe("When It's called", () => {
@@ -16,7 +15,7 @@ describe("Given notFoundError", () => {
     });
 
     test("Then it should call res.json with error true and message 'Resource not found'", () => {
-      const expectedError = getNotFoundError();
+      const expectedError = testNotFoundError;
 
       const res: any = {
         status: jest.fn().mockReturnThis(),
