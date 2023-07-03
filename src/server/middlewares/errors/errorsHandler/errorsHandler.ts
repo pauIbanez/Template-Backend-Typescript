@@ -5,7 +5,7 @@ import { NextFunction, Request, Response } from "express";
 import { buiildResponseError } from "../../../../data/errorObjects/responseErrors";
 import ControledError from "../../../../data/errorObjects/controledError";
 
-const debugToConsole = debug("backend-template:errorHandler");
+const debugToConsole = debug("backend-template:errorHandler"); // Debug section setup
 
 const errorsHandler = (
   err: ControledError,
