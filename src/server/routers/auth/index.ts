@@ -6,6 +6,7 @@ import loginDataValidator from "../../middlewares/requestPayloadValidators/login
 import { endpoints } from "../../../data/serverConfig/endpoints";
 import registrationDataValidator from "../../middlewares/requestPayloadValidators/registrationDataValidator/registrationDataValidator";
 import registerUser from "../../controllers/auth/registerUser/registerUser";
+import createUser from "../../middlewares/auth/userCreator/userCreator";
 
 // Router creation
 const router = express.Router();
@@ -17,6 +18,11 @@ const routerEndpoints = endpoints.auth;
 
 router.post(routerEndpoints.login, loginDataValidator, login, sendToken);
 router.get(routerEndpoints.refreshToken, tokenValidator, sendToken);
-router.post(routerEndpoints.register, registrationDataValidator, registerUser);
+router.post(
+  routerEndpoints.register,
+  registrationDataValidator,
+  createUser,
+  registerUser
+);
 
 export default router;

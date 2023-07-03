@@ -14,11 +14,20 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
   const loginData: LoginData = req.body; // Grab the login data left in the body by the request validator.
 
   try {
-    const foundUser: DatabaseUserData = await Users.findOne({
+    let foundUser: DatabaseUserData | null = null;
+
+    foundUser = await Users.findOne({
       "credentials.email": loginData.email,
     }); // Get the user from the database by email.
 
-    // If no user matches the email write the error and go next.
+    // If no user matches the email check if one matches the username
+    if (!foundUser) {
+      foundUser = await Users.findOne({
+        "credentials.username": loginData.email,
+      }); // Get the user from the database by email.
+    }
+
+    // If no user matches the email or username write the error and go next.
     if (!foundUser) {
       const userNotFoundForEmailError = getUserNotFoundForEmailError(
         loginData.email

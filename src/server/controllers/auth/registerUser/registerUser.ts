@@ -16,6 +16,8 @@ const registerUser = async (
   try {
     const newUser: CreatedUserData = req.body; // Get the user data from the req.body
 
+    console.log(newUser);
+
     const createdUser = await Users.create(newUser); // Create the user in the Database.
 
     // Create the activationToken Payload.
