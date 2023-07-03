@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { getInvalidRegistrationDataError } from "../../../../data/errorObjects/dataValidationErrors";
-import registrationData from "../../../payloadValidators/restrationData";
+import registrationData from "../../../../data/joiObjects/restrationData";
 
 const registrationDataValidator = (
   req: Request,

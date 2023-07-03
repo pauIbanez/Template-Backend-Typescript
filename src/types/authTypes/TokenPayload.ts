@@ -1,5 +1,9 @@
 interface TokenPayload {
-  tokenRefreshTime: string;
+  tokenRefreshTime: number;
+  id: string;
+}
+
+export interface ActivationTokenPayload {
   id: string;
 }
 

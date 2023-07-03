@@ -14,7 +14,7 @@ import TokenPayload from "../../../../types/authTypes/TokenPayload";
 import {
   userSessionDuration,
   userSessionRefresh,
-} from "../../../../data/server-config";
+} from "../../../../data/serverConfig/server-config";
 
 const login = async (req: Request, res: Response, next: NextFunction) => {
   const loginData: LoginData = req.body; // Grab the login data left in the body by the request validator.

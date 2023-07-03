@@ -39,18 +39,6 @@ export const getUserDisabledError = (userId: string): ControledError =>
     },
   });
 
-export const getUserAlreadyRegisteredError = (userId: string): ControledError =>
-  new ControledError({
-    name: "USERALREADYREGISTERED",
-    message: `User for id ${userId} is already registered`,
-    statusCode: 403,
-    messageToSend: "User already registered",
-    severety: ErrorSeverety.low,
-    extraData: {
-      userId,
-    },
-  });
-
 export const getInvalidPasswordError = (userId: string): ControledError =>
   new ControledError({
     name: "BADAUTH",

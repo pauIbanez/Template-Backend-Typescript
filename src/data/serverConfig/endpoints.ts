@@ -5,6 +5,7 @@
 export const authEndpoints = <const>{
   prev: "/auth",
   login: "/login",
+  register: "/register",
   refreshToken: "/refreshToken",
 };
 

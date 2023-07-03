@@ -1,4 +1,7 @@
-import { charactersOTP, lengthOTP } from "../../../../data/server-config";
+import {
+  charactersOTP,
+  lengthOTP,
+} from "../../../../data/serverConfig/server-config";
 
 // This function creates a One Time Password based of the characters in the "charactersOTP" string and length found in server-config.
 const generateOTP = (): string => {

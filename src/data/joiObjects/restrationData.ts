@@ -10,6 +10,7 @@ const registrationData = Joi.object({
     )
     .required(),
   password: Joi.string().min(8).required(),
+  username: Joi.string().required(),
 });
 
 export default registrationData;

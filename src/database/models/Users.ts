@@ -10,7 +10,11 @@ const UserSchema = new Schema(
       firstName: String,
       lastName: String,
       phoneNumber: String,
-
+      username: {
+        type: String,
+        required: true,
+        unique: true,
+      },
       email: {
         type: String,
         required: true,
@@ -25,6 +29,11 @@ const UserSchema = new Schema(
         required: true,
         unique: true,
       },
+      username: {
+        type: String,
+        required: true,
+        unique: true,
+      },
       otpPassword: String,
       password: String,
     },
@@ -34,10 +43,7 @@ const UserSchema = new Schema(
       default: false,
     },
 
-    toCompleteRegister: {
-      type: Boolean,
-      default: true,
-    },
+    verificationToken: String,
 
     resetPasswordOnLogin: {
       type: Boolean,

@@ -7,10 +7,32 @@ interface UserData {
     email: string;
     phoneNumber: string;
     picture: string;
+    username: string;
   };
 
   isDisabled: boolean;
   resetPasswordOnLogin: boolean;
-  toCompleteRegister: boolean;
+  isVerified: boolean;
+}
+
+export interface CreatedUserData {
+  information: {
+    firstName?: string;
+    lastName?: string;
+    phoneNumber?: string;
+    email: string;
+    picture?: string;
+    username: string;
+  };
+
+  credentials: {
+    email: string;
+    password?: string;
+    otpPassword?: string;
+    username: string;
+  };
+
+  isDisabled: boolean;
+  resetPasswordOnLogin: boolean;
 }
 export default UserData;
