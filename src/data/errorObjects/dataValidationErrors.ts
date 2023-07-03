@@ -3,8 +3,6 @@ import { ErrorSeverety } from "../../types/errorTypes/ServerError";
 import ControledError from "./controledError";
 
 export const getInvalidRegistrationDataError = (
-  accountId: string,
-  userId: string,
   details: string
 ): ControledError =>
   new ControledError({
@@ -12,10 +10,8 @@ export const getInvalidRegistrationDataError = (
     message: "Invalid registration payload",
     statusCode: 400,
     messageToSend: `Invalid registration data: ${details}`,
-    severety: ErrorSeverety.medium,
+    severety: ErrorSeverety.low,
     extraData: {
-      accountId,
-      userId,
       details,
     },
   });
