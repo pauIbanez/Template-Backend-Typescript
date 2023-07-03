@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 import debug from "debug";
 import chalk from "chalk";
 
-const debugInConsole = debug("mymenu:database");
+const debugInConsole = debug("backend-template:database");
 
 const connectToDB = (connectionString: string | undefined): Promise<void> =>
   new Promise((resolve, reject) => {

@@ -2,7 +2,7 @@ import debug from "debug";
 import { Application } from "express";
 import ServerError from "../types/errorTypes/ServerError";
 
-const debugInConsole = debug("mymenu:server");
+const debugInConsole = debug("backend-template:server");
 
 const startServer = (port: string, app: Application): Promise<void> =>
   new Promise((resolve, reject) => {
