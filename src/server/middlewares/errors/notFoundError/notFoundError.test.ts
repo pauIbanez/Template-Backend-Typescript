@@ -1,4 +1,4 @@
-import { getNotFoundError } from "../../../../data/notFoundError";
+import { getNotFoundError } from "../../../../data/errorObjects/notFoundError";
 import notFoundError from "./notFoundError";
 import { expectedStatus } from "./notFoundError.testObjects";
 

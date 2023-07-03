@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { getNotFoundError } from "../../../../data/notFoundError";
+import { getNotFoundError } from "../../../../data/errorObjects/notFoundError";
 
 const notFoundError = (_req: Request, res: Response) => {
   const notFoundErrorResponse = getNotFoundError();
