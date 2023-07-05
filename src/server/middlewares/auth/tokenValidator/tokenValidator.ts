@@ -7,6 +7,8 @@ import {
 import TokenPayload from "../../../../types/authTypes/TokenPayload";
 
 const tokenValidator = (req: Request, res: Response, next: NextFunction) => {
+  console.log("HERE");
+  console.log(req.path);
   const headerAuth = req.header("Authorization"); // Grab the request Authorization header
 
   // If no Authorization header is found, write an error and go next.
