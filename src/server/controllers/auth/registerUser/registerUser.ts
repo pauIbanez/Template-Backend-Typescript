@@ -17,7 +17,6 @@ const registerUser = async (
     const newUser: CreatedUserData = req.body; // Get the user data from the req.body
 
     const createdUser = await Users.create(newUser); // Create the user in the Database.
-
     // Create the activationToken Payload.
     const tokenData: ActivationTokenPayload = {
       id: createdUser.id,
@@ -39,9 +38,7 @@ const registerUser = async (
       subject: `Hey ${createdUser.information.username}! Activate your account!`,
       to: createdUser.information.email,
     };
-
     await sendEmail(emailData); // Send the email.
-
     // If everything is correct send a correct response.
     res.json({
       message: "User registered sucessfully",

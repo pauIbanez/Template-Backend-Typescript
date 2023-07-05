@@ -1,21 +1,50 @@
-// import RegistrationData from "../../../../types/userTypes/RegistrationData";
+import DatabaseUserData from "../../../../types/userTypes/DatabaseUserData";
+import { CreatedUserData } from "../../../../types/userTypes/UserData";
 
-// export const successResponse = {
-//   message: "User registered sucessfully",
-// };
+export const successResponse = {
+  message: "User registered sucessfully",
+};
 
-// export const savingError = {
-//   message: "Sum error",
-// };
+export const savingError = {
+  message: "Sum error",
+};
 
-// export const registrationData: RegistrationData = {
-//   firstName: "Tesintg",
-//   lastName: "User",
-//   password: "1234",
-//   phoneNumber: "0000000000",
-//   picture: "ayo.png",
+export const newUserTest: CreatedUserData = {
+  information: {
+    email: "testUserEmail@gmail.com",
+    username: "testUser",
+    firstName: "test",
+    lastName: "user",
+    phoneNumber: "256874123",
+    picture: "https://something.com/picture/54257455.png",
+  },
+  credentials: {
+    email: "testUserEmail@gmail.com",
+    username: "testUser",
+    password: "password",
+  },
+  isDisabled: false,
+  resetPasswordOnLogin: false,
+};
 
-// };
+export const createdUserTest = {
+  information: {
+    email: "testUserEmail@gmail.com",
+    username: "testUser",
+    firstName: "test",
+    lastName: "user",
+    phoneNumber: "256874123",
+    picture: "https://something.com/picture/54257455.png",
+  },
+  credentials: {
+    email: "testUserEmail@gmail.com",
+    username: "testUser",
+    password: "password",
+  },
+  isDisabled: false,
+  resetPasswordOnLogin: false,
+  save: jest.fn(),
+};
 
 // export const expectedUserInformation = {
 //   firstName: "Tesintg",
@@ -58,8 +87,3 @@
 //   ],
 //   save: jest.fn(),
 // };
-
-// export const getModifiableAccountUsers = () => ({
-//   ...accountUsers,
-//   ...JSON.parse(JSON.stringify(accountUsers)),
-// });
