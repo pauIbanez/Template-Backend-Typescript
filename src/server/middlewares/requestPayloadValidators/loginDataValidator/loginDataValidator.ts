@@ -19,7 +19,7 @@ const loginDataValidator = (
   // If the validation fails write an error and go next.
   if (error) {
     const invalidLoginDataError = getInvalidLoginDataError(
-      error.details.map((detail) => detail.message).join(", ")
+      error.details.map((detail) => detail.message)
     );
     next(invalidLoginDataError);
     return;

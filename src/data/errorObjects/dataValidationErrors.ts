@@ -16,14 +16,40 @@ export const getInvalidRegistrationDataError = (
     },
   });
 
-export const getInvalidLoginDataError = (details: string): ControledError =>
+const loginDataErrors = [
+  {
+    detection: "email",
+    name: "MISSINGEMAIL",
+    message: "Missing username or email",
+  },
+  {
+    detection: "password",
+    name: "MISSINGPASSWORD",
+    message: "Missing password",
+  },
+];
+
+const buildInvalidLoginMessage = (details: string[]) => {
+  const messages: string[] = [];
+  details.forEach((detail) => {
+    loginDataErrors.forEach((error) => {
+      if (detail.includes(error.detection)) {
+        messages.push(error.message);
+      }
+    });
+  });
+
+  return messages.join(", ");
+};
+
+export const getInvalidLoginDataError = (details: string[]): ControledError =>
   new ControledError({
     name: "INVALIDLOGINDATA",
     message: "Invalid account creation payload",
     statusCode: 400,
-    messageToSend: `Invalid login data: ${details}`,
-    severety: ErrorSeverety.medium,
+    messageToSend: `Invalid login data: ${buildInvalidLoginMessage(details)}`,
+    severety: ErrorSeverety.low,
     extraData: {
-      details,
+      errors: buildInvalidLoginMessage(details),
     },
   });
