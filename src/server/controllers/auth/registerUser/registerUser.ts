@@ -38,7 +38,10 @@ const registerUser = async (
       subject: `Hey ${createdUser.information.username}! Activate your account!`,
       to: createdUser.information.email,
     };
-    await sendEmail(emailData); // Send the email.
+
+    // Send the email.
+    await sendEmail(emailData);
+
     // If everything is correct send a correct response.
     res.json({
       message: "User registered sucessfully",

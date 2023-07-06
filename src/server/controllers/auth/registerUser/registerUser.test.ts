@@ -1,5 +1,7 @@
 import { getUserNotFoundError } from "../../../../data/errorObjects/userErrors";
 import Users from "../../../../database/models/Users";
+import sendEmail from "../../../utils/email";
+import EmailData from "../../../utils/email/types";
 
 import registerUser from "./registerUser";
 import {
@@ -10,10 +12,8 @@ import {
 } from "./registerUser.testObjects";
 
 jest.mock("../../../../database/models/Users");
-
-const mockSendEmail = jest.fn();
-
-jest.mock("../../../utils/email", () => () => mockSendEmail);
+jest.mock("../../../utils/email");
+const mockSendEmail = sendEmail as jest.Mocked<typeof sendEmail>;
 
 beforeEach(() => {
   jest.resetAllMocks();
@@ -30,9 +30,9 @@ describe("Given registerUser", () => {
         json: jest.fn(),
       };
 
-      const next = jest.fn();
+      (mockSendEmail as jest.Mock).mockResolvedValue(null);
 
-      mockSendEmail.mockResolvedValue(null);
+      const next = jest.fn();
       Users.create = jest.fn().mockResolvedValue(createdUserTest);
 
       await registerUser(req, res, next);
