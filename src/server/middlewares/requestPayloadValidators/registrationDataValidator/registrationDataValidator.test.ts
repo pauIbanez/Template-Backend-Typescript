@@ -1,59 +1,38 @@
-// import { getInvalidRegistrationDataError } from "../../../../data/errorObjects/dataValidationErrors";
-// import registrationDataValidator from "./registrationDataValidator";
-// import {
-//   accountId,
-//   expectedDetailsString,
-//   invalidRegistrationPayload,
-//   userId,
-//   validRegistrationPayload,
-// } from "./registrationDataValidator.testObjects";
+import registrationDataValidator from "./registrationDataValidator";
+import {
+  expectedBody,
+  expectedInvalidRegistrationDataMessage,
+  invalidRegistrationPayload,
+  validRegistrationPayload,
+} from "./registrationDataValidator.testObjects";
 
-// describe("Given registrationDataValidator", () => {
-//   describe("When it's called with a valid payload", () => {
-//     test("then it should call next with nothing", () => {
-//       const req: any = {
-//         body: validRegistrationPayload,
-//       };
+describe("Given registrationDataValidator", () => {
+  describe("When it's called with a valid payload", () => {
+    test("then it should call next with nothing", () => {
+      const req: any = {
+        body: validRegistrationPayload,
+      };
 
-//       const res: any = {
-//         locals: {
-//           accountId,
-//           userId,
-//         },
-//       };
+      const next = jest.fn();
 
-//       const next = jest.fn();
+      registrationDataValidator(req, null, next);
 
-//       registrationDataValidator(req, res, next);
+      expect(next).toHaveBeenCalledWith();
+      expect(req.body).toEqual(expectedBody);
+    });
+  });
 
-//       expect(next).toHaveBeenCalledWith();
-//     });
-//   });
+  describe("When it's called with an invalid payload", () => {
+    test("then it should call next with an error with the appropiate messages", () => {
+      const req: any = {
+        body: invalidRegistrationPayload,
+      };
 
-//   describe("When it's called with an invalid payload", () => {
-//     test("then it should call next with an error", () => {
-//       const expectedError = getInvalidRegistrationDataError(
-//         accountId,
-//         userId,
-//         expectedDetailsString
-//       );
+      const next = jest.fn();
 
-//       const req: any = {
-//         body: invalidRegistrationPayload,
-//       };
+      registrationDataValidator(req, null, next);
 
-//       const res: any = {
-//         locals: {
-//           accountId,
-//           userId,
-//         },
-//       };
-
-//       const next = jest.fn();
-
-//       registrationDataValidator(req, res, next);
-
-//       expect(next).toHaveBeenCalledWith(expectedError);
-//     });
-//   });
-// });
+      expect(next).toHaveBeenCalledWith(expectedInvalidRegistrationDataMessage);
+    });
+  });
+});

@@ -24,3 +24,7 @@ export const expectedInvalidLoginDataMessage: ControledError =
       errors: "Missing username or email",
     },
   });
+
+export const expectedBody = {
+  ...validLoginPayload,
+};

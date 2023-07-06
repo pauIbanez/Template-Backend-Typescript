@@ -1,5 +1,6 @@
 import loginDataValidator from "./loginDataValidator";
 import {
+  expectedBody,
   expectedInvalidLoginDataMessage,
   invalidLoginPayload,
   validLoginPayload,
@@ -7,7 +8,7 @@ import {
 
 describe("Given loginDataValidator", () => {
   describe("When passed a valid payload", () => {
-    test("Then it should call next with nothing", () => {
+    test("Then it should call next with nothing and replace req.body with the validated object", () => {
       const req: any = {
         body: validLoginPayload,
       };
@@ -17,6 +18,7 @@ describe("Given loginDataValidator", () => {
       loginDataValidator(req, null, next);
 
       expect(next).toHaveBeenCalledWith();
+      expect(req.body).toEqual(expectedBody);
     });
   });
 
