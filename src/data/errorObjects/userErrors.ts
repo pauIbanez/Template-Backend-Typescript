@@ -3,7 +3,9 @@
 import { ErrorSeverety } from "../../types/errorTypes/ServerError";
 import ControledError from "./ControledError";
 
-export const getUserNotFoundForEmailError = (email: string): ControledError =>
+export const getUserNotFoundForUsernameOrEmailError = (
+  email: string
+): ControledError =>
   new ControledError({
     name: "MISSINGUSER",
     message: "User not found",
@@ -33,6 +35,18 @@ export const getUserDisabledError = (userId: string): ControledError =>
     message: "User disabled",
     statusCode: 401,
     messageToSend: "This user is currently disabled",
+    severety: ErrorSeverety.low,
+    extraData: {
+      userId,
+    },
+  });
+
+export const getNotYetActivatedError = (userId: string): ControledError =>
+  new ControledError({
+    name: "INACTIVEUSER",
+    message: "User not active",
+    statusCode: 403,
+    messageToSend: "This user is not activated yet!",
     severety: ErrorSeverety.low,
     extraData: {
       userId,

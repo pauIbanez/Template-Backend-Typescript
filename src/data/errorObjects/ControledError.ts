@@ -18,6 +18,7 @@ class ControledError {
     this.statusCode = serverError.statusCode;
     this.messageToSend = serverError.messageToSend;
     this.severety = serverError.severety;
+    this.extraData = serverError.extraData;
 
     if (extraFields) {
       Object.assign(this, { ...extraFields });

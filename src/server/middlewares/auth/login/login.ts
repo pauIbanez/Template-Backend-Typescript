@@ -4,8 +4,9 @@ import Users from "../../../../database/models/Users";
 import LoginData from "../../../../types/authTypes/loginData";
 import {
   getInvalidPasswordError,
+  getNotYetActivatedError,
   getUserDisabledError,
-  getUserNotFoundForEmailError,
+  getUserNotFoundForUsernameOrEmailError,
 } from "../../../../data/errorObjects/userErrors";
 
 import DatabaseUserData from "../../../../types/userTypes/DatabaseUserData";
@@ -29,7 +30,7 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
 
     // If no user matches the email or username write the error and go next.
     if (!foundUser) {
-      const userNotFoundForEmailError = getUserNotFoundForEmailError(
+      const userNotFoundForEmailError = getUserNotFoundForUsernameOrEmailError(
         loginData.email
       );
       next(userNotFoundForEmailError);
@@ -87,8 +88,16 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
       }
     }
 
+    // If the login is correct but the user is not yet activated write the error and go next
+    if (foundUser.verificationToken) {
+      const notActiveError = getNotYetActivatedError(foundUser.id);
+      next(notActiveError);
+      return;
+    }
+
     // If every check has passed write the user id in the res.locals object and go next.
     res.locals.userId = foundUser.id;
+
     next();
   } catch (error) {
     next(error); // If anything throws and error, pass it on to the next function.

@@ -1,6 +1,9 @@
-/* eslint-disable import/first */
-/* eslint-disable import/newline-after-import */
-
+import {
+  getInvalidPasswordError,
+  getNotYetActivatedError,
+  getUserDisabledError,
+  getUserNotFoundForUsernameOrEmailError,
+} from "../../../../data/errorObjects/userErrors";
 import Users from "../../../../database/models/Users";
 import login from "./login";
 import {
@@ -12,18 +15,18 @@ import {
   loginDataWithOtp,
   missingUserEmail,
   missingUserLoginData,
-  nativeError,
   noNoNormalPasswordLoginData,
   noNoOtpPasswordLoginData,
   noPasswordUserId,
   getTestUsers,
-  tokenResponse,
-  validUserId,
+  notActiveUserId,
+  notActiveUserLoginData,
+  normalUserId,
 } from "./login.testObjects";
 
-jest.mock("../../../../database/models/AccountUsers");
-
 let testUsers: any;
+
+jest.mock("../../../../database/models/Users");
 
 beforeEach(() => {
   jest.resetAllMocks();
@@ -32,13 +35,13 @@ beforeEach(() => {
 
 describe("Given login", () => {
   describe("When it's called and eveything goes correctly with normal password", () => {
-    test("The it should call res.json with a token", async () => {
+    test("The it should call next with nothing and put the userId in res.locals", async () => {
       const req: any = {
         body: loginData,
       };
 
       const res: any = {
-        json: jest.fn(),
+        locals: {},
       };
 
       const next = jest.fn();
@@ -47,8 +50,8 @@ describe("Given login", () => {
 
       await login(req, res, next);
 
-      expect(next).not.toHaveBeenCalled();
-      expect(res.json).toHaveBeenCalledWith(tokenResponse);
+      expect(next).toHaveBeenCalledWith();
+      expect(res.locals.userId).toBe(normalUserId);
     });
   });
 
@@ -59,7 +62,7 @@ describe("Given login", () => {
       };
 
       const res: any = {
-        json: jest.fn(),
+        locals: {},
       };
 
       const next = jest.fn();
@@ -70,10 +73,30 @@ describe("Given login", () => {
 
       await login(req, res, next);
 
-      expect(next).not.toHaveBeenCalled();
+      expect(next).toHaveBeenCalledWith();
+      expect(res.locals.userId).toBe(normalUserId);
+
       expect(user.save).toHaveBeenCalled();
       expect(user.credentials.otpPassword).toBeFalsy();
-      expect(res.json).toHaveBeenCalledWith(tokenResponse);
+    });
+  });
+
+  describe("When it's called and there is no user matching the username/email", () => {
+    test("The it should call next with an error", async () => {
+      const expectedError =
+        getUserNotFoundForUsernameOrEmailError(missingUserEmail);
+
+      const req: any = {
+        body: missingUserLoginData,
+      };
+
+      const next = jest.fn();
+
+      Users.findOne = jest.fn().mockResolvedValue(null);
+
+      await login(req, null, next);
+
+      expect(next).toHaveBeenCalledWith(expectedError);
     });
   });
 
@@ -85,41 +108,31 @@ describe("Given login", () => {
         body: noNoNormalPasswordLoginData,
       };
 
-      const res: any = {
-        json: jest.fn(),
-      };
-
       const next = jest.fn();
 
       Users.findOne = jest.fn().mockResolvedValue(testUsers.noPasswordUser);
 
-      await login(req, res, next);
+      await login(req, null, next);
 
       expect(next).toHaveBeenCalledWith(expectedError);
-      expect(res.json).not.toHaveBeenCalled();
     });
   });
 
   describe("When it's called with wrong password", () => {
     test("The it should call next with an error", async () => {
-      const expectedError = getInvalidPasswordError(validUserId);
+      const expectedError = getInvalidPasswordError(normalUserId);
 
       const req: any = {
         body: invalidPasswordLoginData,
-      };
-
-      const res: any = {
-        json: jest.fn(),
       };
 
       const next = jest.fn();
 
       Users.findOne = jest.fn().mockResolvedValue(testUsers.normalUser);
 
-      await login(req, res, next);
+      await login(req, null, next);
 
       expect(next).toHaveBeenCalledWith(expectedError);
-      expect(res.json).not.toHaveBeenCalled();
     });
   });
 
@@ -131,41 +144,31 @@ describe("Given login", () => {
         body: noNoOtpPasswordLoginData,
       };
 
-      const res: any = {
-        json: jest.fn(),
-      };
-
       const next = jest.fn();
 
       Users.findOne = jest.fn().mockResolvedValue(testUsers.noPasswordUser);
 
-      await login(req, res, next);
+      await login(req, null, next);
 
       expect(next).toHaveBeenCalledWith(expectedError);
-      expect(res.json).not.toHaveBeenCalled();
     });
   });
 
   describe("When it's called with wrong otp password", () => {
     test("The it should call next with an error", async () => {
-      const expectedError = getInvalidPasswordError(validUserId);
+      const expectedError = getInvalidPasswordError(normalUserId);
 
       const req: any = {
         body: invalidOtpPasswordLoginData,
-      };
-
-      const res: any = {
-        json: jest.fn(),
       };
 
       const next = jest.fn();
 
       Users.findOne = jest.fn().mockResolvedValue(testUsers.otpUser);
 
-      await login(req, res, next);
+      await login(req, null, next);
 
       expect(next).toHaveBeenCalledWith(expectedError);
-      expect(res.json).not.toHaveBeenCalled();
     });
   });
 
@@ -177,65 +180,31 @@ describe("Given login", () => {
         body: disabledUserLoginData,
       };
 
-      const res: any = {
-        json: jest.fn(),
-      };
-
       const next = jest.fn();
 
       Users.findOne = jest.fn().mockResolvedValue(testUsers.disabledUser);
 
-      await login(req, res, next);
+      await login(req, null, next);
 
       expect(next).toHaveBeenCalledWith(expectedError);
-      expect(res.json).not.toHaveBeenCalled();
     });
   });
 
-  describe("When it's called and the user is not found", () => {
+  describe("When it's called and the user is not yet active", () => {
     test("The it should call next with an error", async () => {
-      const expectedError = getUserNotFoundForEmailError(missingUserEmail);
+      const expectedError = getNotYetActivatedError(notActiveUserId);
 
       const req: any = {
-        body: missingUserLoginData,
-      };
-
-      const res: any = {
-        json: jest.fn(),
+        body: notActiveUserLoginData,
       };
 
       const next = jest.fn();
 
-      Users.findOne = jest.fn().mockResolvedValue(null);
+      Users.findOne = jest.fn().mockResolvedValue(testUsers.notActiveUser);
 
-      await login(req, res, next);
+      await login(req, null, next);
 
       expect(next).toHaveBeenCalledWith(expectedError);
-      expect(res.json).not.toHaveBeenCalled();
-    });
-  });
-
-  describe("When it's called and something throws an error", () => {
-    test("The it should call next with the thrown error", async () => {
-      const req: any = {
-        body: loginData,
-      };
-
-      const res: any = {
-        json: jest.fn(),
-      };
-
-      const next = jest.fn();
-
-      jwt.sign = jest.fn().mockImplementation(() => {
-        throw nativeError;
-      });
-      Users.findOne = jest.fn().mockResolvedValue(testUsers.normalUser);
-
-      await login(req, res, next);
-
-      expect(next).toHaveBeenCalledWith(nativeError);
-      expect(res.json).not.toHaveBeenCalled();
     });
   });
 });
