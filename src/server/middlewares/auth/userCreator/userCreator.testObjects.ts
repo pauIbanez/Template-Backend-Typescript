@@ -5,7 +5,6 @@ const email = "testuser@email.com";
 const firstName = "test";
 const lastName = "user";
 const password = "12345678";
-const phoneNumber = "45687563";
 const picture = "aaaaa";
 const username = "testuser";
 
@@ -16,7 +15,6 @@ export const testUserRegistrationData: RegistrationData = {
   firstName,
   lastName,
   password,
-  phoneNumber,
   picture,
   username,
 };
@@ -26,7 +24,6 @@ export const expectedCreatedUser: CreatedUserData = {
     email,
     firstName,
     lastName,
-    phoneNumber,
     picture,
     username,
   },

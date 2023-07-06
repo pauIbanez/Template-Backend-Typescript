@@ -10,7 +10,6 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
     firstName,
     lastName,
     password,
-    phoneNumber,
     picture,
     username,
   }: RegistrationData = req.body;
@@ -24,7 +23,6 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
         email,
         firstName,
         lastName,
-        phoneNumber,
         picture,
         username,
       },

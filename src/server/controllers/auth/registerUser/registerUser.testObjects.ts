@@ -18,7 +18,6 @@ export const newUserTest: CreatedUserData = {
     username: createdUserUsername,
     firstName: "test",
     lastName: "user",
-    phoneNumber: "256874123",
     picture: "https://something.com/picture/54257455.png",
   },
   credentials: {
@@ -36,7 +35,6 @@ export const createdUserTest = {
     username: createdUserUsername,
     firstName: "test",
     lastName: "user",
-    phoneNumber: "256874123",
     picture: "https://something.com/picture/54257455.png",
   },
   credentials: {

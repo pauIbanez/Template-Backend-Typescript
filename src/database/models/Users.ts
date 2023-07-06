@@ -9,7 +9,6 @@ const UserSchema = new Schema(
       _id: false,
       firstName: String,
       lastName: String,
-      phoneNumber: String,
       username: {
         type: String,
         required: true,
