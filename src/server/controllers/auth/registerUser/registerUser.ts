@@ -27,6 +27,7 @@ const registerUser = async (
       expiresIn: `${userActivationExpirationInHours}h`,
     });
 
+    // Create the emailData object for the mail function.
     const emailData: EmailData = {
       html: getUserActivationEmail(verificationToken),
       internalEmailName: "User Activation email",
@@ -47,10 +48,8 @@ const registerUser = async (
     createdUser.verificationToken = verificationToken;
     createdUser.save();
 
-    // Create the emailData object for the mail function.
-
     // If everything is correct send a correct response.
-    res.json({
+    res.status(201).json({
       message: "User registered sucessfully",
     });
   } catch (error) {

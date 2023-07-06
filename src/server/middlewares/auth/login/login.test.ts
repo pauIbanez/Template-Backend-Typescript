@@ -1,14 +1,6 @@
 /* eslint-disable import/first */
 /* eslint-disable import/newline-after-import */
-import dotenv from "dotenv";
-dotenv.config();
 
-import jwt from "jsonwebtoken";
-import {
-  getInvalidPasswordError,
-  getUserDisabledError,
-  getUserNotFoundForEmailError,
-} from "../../../../data/errorObjects/userErrors";
 import Users from "../../../../database/models/Users";
 import login from "./login";
 import {

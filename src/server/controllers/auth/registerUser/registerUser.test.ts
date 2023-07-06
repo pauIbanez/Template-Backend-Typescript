@@ -31,6 +31,7 @@ describe("Given registerUser", () => {
 
       const res: any = {
         json: jest.fn(),
+        status: jest.fn().mockReturnThis(),
       };
 
       (mockSendEmail as jest.Mock).mockResolvedValue(null);
@@ -53,6 +54,7 @@ describe("Given registerUser", () => {
 
       const res: any = {
         json: jest.fn(),
+        status: jest.fn().mockReturnThis(),
       };
 
       (mockSendEmail as jest.Mock).mockResolvedValue(null);
@@ -71,6 +73,7 @@ describe("Given registerUser", () => {
 
       const res: any = {
         json: jest.fn(),
+        status: jest.fn().mockReturnThis(),
       };
 
       (mockSendEmail as jest.Mock).mockResolvedValue(null);
@@ -116,6 +119,7 @@ describe("Given registerUser", () => {
 
       const res: any = {
         json: jest.fn(),
+        status: jest.fn().mockReturnThis(),
       };
 
       (mockSendEmail as jest.Mock).mockResolvedValue(null);
