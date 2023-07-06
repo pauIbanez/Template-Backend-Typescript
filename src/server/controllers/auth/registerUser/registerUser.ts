@@ -27,11 +27,6 @@ const registerUser = async (
       expiresIn: `${userActivationExpirationInHours}h`,
     });
 
-    // Add the verificationToken to the created user and save it.
-    createdUser.verificationToken = verificationToken;
-    createdUser.save();
-
-    // Create the emailData object for the mail function.
     const emailData: EmailData = {
       html: getUserActivationEmail(verificationToken),
       internalEmailName: "User Activation email",
@@ -39,8 +34,20 @@ const registerUser = async (
       to: createdUser.information.email,
     };
 
-    // Send the email.
-    await sendEmail(emailData);
+    try {
+      // Send the email.
+      await sendEmail(emailData);
+
+      // eslint-disable-next-line no-empty
+    } catch (e) {
+      // TODO: ADD SOME SORT OF BACKLOG FOR EMAIL RE-TRY
+    }
+
+    // Add the verificationToken to the created user and save it.
+    createdUser.verificationToken = verificationToken;
+    createdUser.save();
+
+    // Create the emailData object for the mail function.
 
     // If everything is correct send a correct response.
     res.json({

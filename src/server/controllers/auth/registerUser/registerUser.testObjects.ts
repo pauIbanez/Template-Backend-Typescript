@@ -1,5 +1,5 @@
-import DatabaseUserData from "../../../../types/userTypes/DatabaseUserData";
 import { CreatedUserData } from "../../../../types/userTypes/UserData";
+import EmailData from "../../../utils/email/types";
 
 export const successResponse = {
   message: "User registered sucessfully",
@@ -9,18 +9,21 @@ export const savingError = {
   message: "Sum error",
 };
 
+const createdUserEmail = "testUser@gmail.com";
+const createdUserUsername = "testuser";
+
 export const newUserTest: CreatedUserData = {
   information: {
-    email: "testUserEmail@gmail.com",
-    username: "testUser",
+    email: createdUserEmail,
+    username: createdUserUsername,
     firstName: "test",
     lastName: "user",
     phoneNumber: "256874123",
     picture: "https://something.com/picture/54257455.png",
   },
   credentials: {
-    email: "testUserEmail@gmail.com",
-    username: "testUser",
+    email: createdUserEmail,
+    username: createdUserUsername,
     password: "password",
   },
   isDisabled: false,
@@ -29,16 +32,16 @@ export const newUserTest: CreatedUserData = {
 
 export const createdUserTest = {
   information: {
-    email: "testUserEmail@gmail.com",
-    username: "testUser",
+    email: createdUserEmail,
+    username: createdUserUsername,
     firstName: "test",
     lastName: "user",
     phoneNumber: "256874123",
     picture: "https://something.com/picture/54257455.png",
   },
   credentials: {
-    email: "testUserEmail@gmail.com",
-    username: "testUser",
+    email: createdUserEmail,
+    username: createdUserUsername,
     password: "password",
   },
   isDisabled: false,
@@ -46,44 +49,9 @@ export const createdUserTest = {
   save: jest.fn(),
 };
 
-// export const expectedUserInformation = {
-//   firstName: "Tesintg",
-//   lastName: "User",
-//   phoneNumber: "0000000000",
-//   picture: "ayo.png",
-// };
-
-// export const accountUsers = {
-//   accountId,
-//   users: [
-//     {
-//       id: validUserId,
-//       information: {
-//         email: "testing@user.com",
-//       },
-//       credentials: {
-//         email: "testing@user.com",
-//       },
-//       organizationData: {
-//         group: "default",
-//         roleId: "superuser",
-//       },
-//       toCompleteRegister: true,
-//     },
-//     {
-//       id: registerCompleatedUserId,
-//       information: {
-//         email: "testing2@user.com",
-//       },
-//       credentials: {
-//         email: "testing2@user.com",
-//       },
-//       organizationData: {
-//         group: "default",
-//         roleId: "superuser",
-//       },
-//       toCompleteRegister: false,
-//     },
-//   ],
-//   save: jest.fn(),
-// };
+export const expectedMailData: EmailData = {
+  html: expect.any(String),
+  internalEmailName: "User Activation email",
+  subject: `Hey ${createdUserUsername}! Activate your account!`,
+  to: createdUserEmail,
+};

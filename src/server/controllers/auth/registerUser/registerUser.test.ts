@@ -1,22 +1,25 @@
-import { getUserNotFoundError } from "../../../../data/errorObjects/userErrors";
 import Users from "../../../../database/models/Users";
 import sendEmail from "../../../utils/email";
-import EmailData from "../../../utils/email/types";
 
 import registerUser from "./registerUser";
 import {
   createdUserTest,
+  expectedMailData,
   newUserTest,
-  savingError,
   successResponse,
 } from "./registerUser.testObjects";
 
 jest.mock("../../../../database/models/Users");
 jest.mock("../../../utils/email");
+
 const mockSendEmail = sendEmail as jest.Mocked<typeof sendEmail>;
+
+let modifiableCreatedUser: any;
 
 beforeEach(() => {
   jest.resetAllMocks();
+
+  modifiableCreatedUser = { ...createdUserTest };
 });
 
 describe("Given registerUser", () => {
@@ -33,7 +36,7 @@ describe("Given registerUser", () => {
       (mockSendEmail as jest.Mock).mockResolvedValue(null);
 
       const next = jest.fn();
-      Users.create = jest.fn().mockResolvedValue(createdUserTest);
+      Users.create = jest.fn().mockResolvedValue(modifiableCreatedUser);
 
       await registerUser(req, res, next);
 
@@ -42,65 +45,114 @@ describe("Given registerUser", () => {
       expect(Users.create).toHaveBeenCalledWith(newUserTest);
       expect(res.json).toHaveBeenCalledWith(successResponse);
     });
+
+    test("Then it should create the correct MailData and call sendEmail with it", async () => {
+      const req: any = {
+        body: newUserTest,
+      };
+
+      const res: any = {
+        json: jest.fn(),
+      };
+
+      (mockSendEmail as jest.Mock).mockResolvedValue(null);
+
+      Users.create = jest.fn().mockResolvedValue(modifiableCreatedUser);
+
+      await registerUser(req, res, null);
+
+      expect(mockSendEmail).toHaveBeenCalledWith(expectedMailData);
+    });
+
+    test("Then it should create a verification token, put it in the created user and call save", async () => {
+      const req: any = {
+        body: newUserTest,
+      };
+
+      const res: any = {
+        json: jest.fn(),
+      };
+
+      (mockSendEmail as jest.Mock).mockResolvedValue(null);
+
+      Users.create = jest.fn().mockResolvedValue(modifiableCreatedUser);
+
+      await registerUser(req, res, null);
+
+      expect((modifiableCreatedUser as any).verificationToken).toBeTruthy();
+      expect(createdUserTest.save).toHaveBeenCalled();
+    });
   });
 
-  //   describe("When it's called and the user is not found", () => {
-  //     test("Then it should call next with an error", async () => {
-  //       const expectedError = getUserNotFoundError(accountId, missingUserId);
+  describe("When it's called and the user fails to create", () => {
+    test("Then it should call next and not anything else", async () => {
+      const req: any = {
+        body: newUserTest,
+      };
 
-  //       const req: any = {
-  //         body: registrationData,
-  //       };
+      const res: any = {
+        json: jest.fn(),
+      };
 
-  //       const res: any = {
-  //         json: jest.fn(),
-  //         locals: {
-  //           accountId,
-  //           userId: missingUserId,
-  //           accountUsers,
-  //         },
-  //       };
+      (mockSendEmail as jest.Mock).mockResolvedValue(null);
 
-  //       const next = jest.fn();
+      const next = jest.fn();
+      Users.create = jest.fn().mockRejectedValue(null);
 
-  //       await registerUser(req, res, next);
+      await registerUser(req, res, next);
 
-  //       expect(next).toHaveBeenCalledWith(expectedError);
-  //       expect(res.json).not.toHaveBeenCalled();
-  //     });
-  //   });
+      expect(Users.create).toHaveBeenCalledWith(newUserTest);
+      expect(mockSendEmail).not.toHaveBeenCalled();
+      expect(next).toHaveBeenCalled();
+      expect(res.json).not.toHaveBeenCalled();
+    });
+  });
 
-  //   describe("When it's called and the accountUsers saving fails", () => {
-  //     test("Then it should call next with an error", async () => {
-  //       const expectedError = getSavingAccountUsersError(
-  //         accountId,
-  //         savingError.message
-  //       );
+  describe("When it's called and the user fails to create", () => {
+    test("Then it should call next and not anything else", async () => {
+      const req: any = {
+        body: newUserTest,
+      };
 
-  //       const req: any = {
-  //         body: registrationData,
-  //       };
+      const res: any = {
+        json: jest.fn(),
+      };
 
-  //       const modifiableAccountUsers = getModifiableAccountUsers();
+      (mockSendEmail as jest.Mock).mockResolvedValue(null);
 
-  //       const res: any = {
-  //         json: jest.fn(),
-  //         locals: {
-  //           accountId,
-  //           userId: validUserId,
-  //           accountUsers: modifiableAccountUsers,
-  //         },
-  //       };
+      const next = jest.fn();
+      Users.create = jest.fn().mockRejectedValue(null);
 
-  //       const next = jest.fn();
-  //       modifiableAccountUsers.save.mockImplementation(() => {
-  //         throw savingError;
-  //       });
+      await registerUser(req, res, next);
 
-  //       await registerUser(req, res, next);
+      expect(Users.create).toHaveBeenCalledWith(newUserTest);
+      expect(mockSendEmail).not.toHaveBeenCalled();
+      expect(next).toHaveBeenCalled();
+      expect(res.json).not.toHaveBeenCalled();
+    });
+  });
 
-  //       expect(next).toHaveBeenCalledWith(expectedError);
-  //       expect(res.json).not.toHaveBeenCalled();
-  //     });
-  //   });
+  describe("When it's called and the mail fails to be sent", () => {
+    test("Then it should still call res.json and not next", async () => {
+      const req: any = {
+        body: newUserTest,
+      };
+
+      const res: any = {
+        json: jest.fn(),
+      };
+
+      (mockSendEmail as jest.Mock).mockRejectedValue(null);
+
+      const next = jest.fn();
+      Users.create = jest.fn().mockResolvedValue(modifiableCreatedUser);
+
+      await registerUser(req, res, next);
+
+      expect(Users.create).toHaveBeenCalledWith(newUserTest);
+      expect(mockSendEmail).toHaveBeenCalled();
+      expect(next).not.toHaveBeenCalled();
+      expect(res.json).toHaveBeenCalledWith(successResponse);
+    });
+  });
 });
