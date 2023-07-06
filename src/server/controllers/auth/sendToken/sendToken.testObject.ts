@@ -1,5 +1,7 @@
+export const mockToken = "mockToken";
+
 export const tokenResponse = {
-  token: expect.any(String),
+  token: mockToken,
 };
 
-export const userId = "";
+export const userIdTest = "";
