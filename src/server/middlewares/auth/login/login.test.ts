@@ -5,6 +5,7 @@ import {
   getUserNotFoundForUsernameOrEmailError,
 } from "../../../../data/errorObjects/userErrors";
 import Users from "../../../../database/models/Users";
+import { normalUserLoginData } from "../../../routers/auth/tests/loginEndpoint.testObjects";
 import login from "./login";
 import {
   disabledUserId,
@@ -201,6 +202,24 @@ describe("Given login", () => {
       const next = jest.fn();
 
       Users.findOne = jest.fn().mockResolvedValue(testUsers.notActiveUser);
+
+      await login(req, null, next);
+
+      expect(next).toHaveBeenCalledWith(expectedError);
+    });
+  });
+
+  describe("When somthing braks", () => {
+    test("The it should call next with an error", async () => {
+      const expectedError = new Error("Somthing wrong");
+
+      const req: any = {
+        body: normalUserLoginData,
+      };
+
+      const next = jest.fn();
+
+      Users.findOne = jest.fn().mockRejectedValue(expectedError);
 
       await login(req, null, next);
 
