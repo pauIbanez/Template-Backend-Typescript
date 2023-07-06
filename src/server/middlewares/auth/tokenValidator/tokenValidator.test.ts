@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   getInvalidTokenError,
   getNoAuthHeaderError,
@@ -12,7 +11,7 @@ import {
 
 describe("Given tokenValidator", () => {
   describe("When it's callend passing a valid token", () => {
-    test("Then it should call next with nothing and put account and userId in res.locals", () => {
+    test("Then it should call next with nothing and put the userId in res.locals", () => {
       const req: any = {
         header: jest.fn().mockReturnValue(getValidAuth()),
       };
