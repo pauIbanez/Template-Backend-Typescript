@@ -56,7 +56,7 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
       // Check if the OTP is valid.
       const isPasswordValid = await bcrypt.compare(
         loginData.password,
-        foundUser.credentials.otpPassword as string
+        foundUser.credentials.otpPassword
       );
 
       // If the password is invalid go next with the invalid password error written previously.
@@ -78,7 +78,7 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
       // Check if the password is valid.
       const isPasswordValid = await bcrypt.compare(
         loginData.password.toString(),
-        foundUser.credentials.password as string
+        foundUser.credentials.password
       );
 
       // If the  DB user does not have a password go next with the invalid password error written previously.

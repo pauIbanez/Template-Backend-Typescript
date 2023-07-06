@@ -12,17 +12,13 @@ class ControledError {
   extraData?: { [key: string]: any };
   controled: boolean = true;
 
-  constructor(serverError: ServerError, extraFields?: { [key: string]: any }) {
+  constructor(serverError: ServerError) {
     this.name = serverError.name;
     this.message = serverError.message;
     this.statusCode = serverError.statusCode;
     this.messageToSend = serverError.messageToSend;
     this.severety = serverError.severety;
     this.extraData = serverError.extraData;
-
-    if (extraFields) {
-      Object.assign(this, { ...extraFields });
-    }
   }
 }
 
