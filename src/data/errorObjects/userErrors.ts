@@ -33,7 +33,7 @@ export const getUserDisabledError = (userId: string): ControledError =>
   new ControledError({
     name: "DISABLEDUSER",
     message: "User disabled",
-    statusCode: 401,
+    statusCode: 403,
     messageToSend: "This user is currently disabled",
     severety: ErrorSeverety.low,
     extraData: {

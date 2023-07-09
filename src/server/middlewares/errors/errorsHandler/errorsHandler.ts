@@ -26,6 +26,28 @@ const errorsHandler = (
       chalk.redBright(`Unhandled error found!: \n ${err.message}`)
     );
   }
+
+  if (process.env.DEBUG_VERBOSE === "true") {
+    debugToConsole(
+      chalk.redBright(`\n Error: `),
+      chalk.whiteBright(err.name),
+      chalk.redBright(`\n Message: `),
+      chalk.whiteBright(err.message),
+      chalk.redBright(`\n Sent message:`),
+      chalk.whiteBright(err.messageToSend),
+      chalk.redBright(`\n Code:`),
+      chalk.whiteBright(err.statusCode),
+      chalk.redBright(`\n Data: \n`),
+      chalk.whiteBright(
+        err.extraData
+          ? Object.entries(err.extraData)
+              .map((entry) => `  ${entry[0]}: ${entry[1]} \n`)
+              .join("")
+          : "no data"
+      )
+    );
+  }
+
   res.status(code).json(errorToSend); // Send the response with the error and code
 };
 

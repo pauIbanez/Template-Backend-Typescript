@@ -5,7 +5,6 @@ import {
   getUserNotFoundForUsernameOrEmailError,
 } from "../../../../data/errorObjects/userErrors";
 import Users from "../../../../database/models/Users";
-import { normalUserLoginData } from "../../../routers/auth/tests/loginEndpoint.testObjects";
 import login from "./login";
 import {
   disabledUserId,
@@ -214,7 +213,7 @@ describe("Given login", () => {
       const expectedError = new Error("Somthing wrong");
 
       const req: any = {
-        body: normalUserLoginData,
+        body: loginData,
       };
 
       const next = jest.fn();

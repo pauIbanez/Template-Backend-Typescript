@@ -1,98 +1,170 @@
+import bcrypt from "bcrypt";
 import LoginData from "../../../../types/authTypes/loginData";
 import ResponseError from "../../../../types/errorTypes/ResponseError";
-import hashPassword from "../../../utils/auth/hashPassword/hashPassword";
 
-export const missingUserLoginData: LoginData = {
-  email: "missing@email.com",
-  password: "password1234",
+const validUserUsername = "testuser";
+const invalidUserUsername = "bruh";
+
+const validUserEmail = "testing@email.com";
+const otpUserEmail = "otpuser@email.com";
+const disabledUserEmail = "disabled@email.com";
+const missingUserEmail = "missing@email.com";
+const noPasswordUserEmail = "nopassword@email.com";
+const notActiveUserEmail = "notActive@email.com";
+
+const validPassword = "1234";
+const invalidPassword = "1nv4l1dP455w0rd1r0n1c4ll9MuchM0r353cur3";
+
+const hashSalt = bcrypt.genSaltSync(10);
+const validHashedPassword = bcrypt.hashSync(validPassword, hashSalt);
+
+export const loginData: LoginData = {
+  email: validUserEmail,
+  password: validPassword,
 };
 
-export const normalUserLoginData: LoginData = {
-  email: "normal@email.com",
-  password: "password1234",
+export const usernameLoginData: LoginData = {
+  email: validUserUsername,
+  password: validPassword,
+};
+
+export const invalidUsernameLoginData: LoginData = {
+  email: invalidUserUsername,
+  password: validPassword,
+};
+
+export const loginDataWithOtp: LoginData = {
+  email: otpUserEmail,
+  password: validPassword,
+  withOtp: true,
 };
 
 export const invalidPasswordLoginData: LoginData = {
-  email: "normal@email.com",
-  password: "invalidPassword",
+  email: validUserEmail,
+  password: invalidPassword,
 };
 
-export const otpUserLoginData: LoginData = {
-  email: "otp@email.com",
-  password: "password1234",
+export const invalidOtpPasswordLoginData: LoginData = {
+  email: validUserEmail,
+  password: invalidPassword,
+  withOtp: true,
+};
+
+export const noNormalPasswordLoginData: LoginData = {
+  email: noPasswordUserEmail,
+  password: "1234",
+};
+
+export const noOtpPasswordLoginData: LoginData = {
+  email: noPasswordUserEmail,
+  password: "1234",
   withOtp: true,
 };
 
 export const disabledUserLoginData: LoginData = {
-  email: "disabled@email.com",
-  password: "password1234",
+  email: disabledUserEmail,
+  password: invalidPassword,
 };
 
-export const noPasswordLoginData: LoginData = {
-  email: "nopassword@email.com",
-  password: "password1234",
+export const missingUserLoginData: LoginData = {
+  email: missingUserEmail,
+  password: validPassword,
 };
 
-export const genericLoginError: ResponseError = {
+export const notActiveUserLoginData: LoginData = {
+  email: notActiveUserEmail,
+  password: validPassword,
+};
+
+export const expectedGenericLoginError: ResponseError = {
   error: true,
   code: 401,
   message: "Incorrect email or password",
 };
 
-export const disabledUserError: ResponseError = {
+export const expectedDisabledUserError: ResponseError = {
   error: true,
-  code: 401,
+  code: 403,
   message: "This user is currently disabled",
 };
 
-export const getTestUsers = async (): Promise<any> => [
+export const expectedNotActiveUserError: ResponseError = {
+  error: true,
+  code: 403,
+  message: "This user is not activated yet!",
+};
+
+export const getTestUsers = () => [
   {
     information: {
       firstName: "test",
       lastName: "user",
-      email: normalUserLoginData.email,
+      email: validUserEmail,
+      username: validUserUsername,
     },
 
     credentials: {
-      email: normalUserLoginData.email,
-      password: await hashPassword(normalUserLoginData.password),
+      email: validUserEmail,
+      password: validHashedPassword,
+      username: validUserUsername,
     },
   },
   {
     information: {
       firstName: "test",
       lastName: "user",
-      email: otpUserLoginData.email,
+      email: otpUserEmail,
+      username: "notimportant",
     },
 
     credentials: {
-      email: otpUserLoginData.email,
-      otpPassword: await hashPassword(otpUserLoginData.password),
-    },
-    save: jest.fn(),
-  },
-  {
-    information: {
-      firstName: "test",
-      lastName: "user",
-      email: noPasswordLoginData.email,
-    },
-
-    credentials: {
-      email: noPasswordLoginData.email,
+      email: otpUserEmail,
+      otpPassword: validHashedPassword,
+      username: "notimportant",
     },
   },
   {
     information: {
       firstName: "test",
       lastName: "user",
-      email: disabledUserLoginData.email,
+      email: noPasswordUserEmail,
+      username: "notimportant",
     },
 
     credentials: {
-      email: disabledUserLoginData.email,
-      password: disabledUserLoginData.password,
+      email: noPasswordUserEmail,
+      username: "notimportant",
+    },
+  },
+  {
+    information: {
+      firstName: "test",
+      lastName: "user",
+      email: disabledUserEmail,
+      username: "notimportant",
+    },
+
+    credentials: {
+      email: disabledUserEmail,
+      password: validHashedPassword,
+      username: "notimportant",
     },
     isDisabled: true,
+  },
+  {
+    information: {
+      firstName: "test",
+      lastName: "user",
+      email: notActiveUserEmail,
+      username: "notimportant",
+    },
+
+    credentials: {
+      email: notActiveUserEmail,
+      password: validHashedPassword,
+      username: "notimportant",
+    },
+    isDisabled: false,
+    verificationToken: "ayooo",
   },
 ];

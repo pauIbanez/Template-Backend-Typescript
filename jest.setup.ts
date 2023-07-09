@@ -1,13 +1,18 @@
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
 import TokenPayload from "./src/types/authTypes/TokenPayload";
 
-let originalEnv: any;
-beforeAll(() => {
-  originalEnv = { ...process.env };
+dotenv.config();
+
+const originalEnv = { ...process.env };
+
+beforeEach(() => {
+  jest.resetModules();
+  process.env = { ...originalEnv };
   process.env.TOKEN_SECRET = "Super secure secret";
 });
 
-afterAll(() => {
+afterEach(() => {
   process.env = originalEnv;
 });
 

@@ -1,16 +1,6 @@
 import bcrypt from "bcrypt";
 import LoginData from "../../../../types/authTypes/loginData";
 
-const hashSalt = bcrypt.genSaltSync(10);
-
-export const tokenResponse = {
-  token: expect.any(String),
-};
-
-export const nativeError = {
-  message: "Something broke",
-};
-
 export const normalUserId = "622f00e91e85099995d63b01";
 export const disabledUserId = "622f00e91e85099995d63b02";
 export const noPasswordUserId = "622f00e91e85099995d63b04";
@@ -25,6 +15,7 @@ const notActiveUserEmail = "notActive@email.com";
 const validPassword = "1234";
 const invalidPassword = "1nv4l1dP455w0rd1r0n1c4ll9MuchM0r353cur3";
 
+const hashSalt = bcrypt.genSaltSync(10);
 export const validHashedPassword = bcrypt.hashSync(validPassword, hashSalt);
 export const invalidHashedPasword = bcrypt.hashSync(invalidPassword, hashSalt);
 
@@ -109,11 +100,11 @@ export const getTestUsers = () => ({
     information: {
       firstName: "test",
       lastName: "user",
-      email: validUserEmail,
+      email: noPasswordUserEmail,
     },
 
     credentials: {
-      email: validUserEmail,
+      email: noPasswordUserEmail,
     },
   },
   disabledUser: {
