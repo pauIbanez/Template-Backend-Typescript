@@ -21,6 +21,8 @@ import {
   invalidOtpPasswordLoginData,
   usernameLoginData,
   invalidUsernameLoginData,
+  invalidLoginData,
+  expectedMissingEmailResponse,
 } from "./loginEndpoint.testObjects";
 
 let mongoServer: MongoMemoryServer;
@@ -187,6 +189,19 @@ describe("Given /auth/login endpoint", () => {
         .expect(401);
 
       expect(body).toMatchObject(expectedGenericLoginError);
+    });
+  });
+
+  describe("When it's called with invalid loginData", () => {
+    test("Then it should respond with 400 and an error", async () => {
+      const requestPath = "/auth/login";
+
+      const { body } = await request(app)
+        .post(requestPath)
+        .send(invalidLoginData)
+        .expect(400);
+
+      expect(body).toMatchObject(expectedMissingEmailResponse);
     });
   });
 });

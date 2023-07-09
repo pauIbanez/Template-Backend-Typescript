@@ -76,6 +76,17 @@ export const notActiveUserLoginData: LoginData = {
   password: validPassword,
 };
 
+export const invalidLoginData = {
+  bruh: "asda",
+  password: "asdas",
+};
+
+export const expectedMissingEmailResponse: ResponseError = {
+  error: true,
+  code: 400,
+  message: "Invalid login data: Missing username or email",
+};
+
 export const expectedGenericLoginError: ResponseError = {
   error: true,
   code: 401,
