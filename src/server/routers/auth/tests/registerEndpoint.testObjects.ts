@@ -69,13 +69,13 @@ export const expectedInvalidDataError: ResponseError = {
 export const expectedEmailAlreadyInUseError: ResponseError = {
   code: 400,
   error: true,
-  message: "Invalid registration data: Invalid email",
+  message: "Email is already in use ",
 };
 
 export const expectedUsernameAlreadyInUseError: ResponseError = {
   code: 400,
   error: true,
-  message: "Invalid registration data: Invalid email",
+  message: "Username is already in use ",
 };
 
 export const sucessResponse = {
