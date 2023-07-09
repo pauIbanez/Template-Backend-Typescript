@@ -38,13 +38,13 @@ const errorsHandler = (
       chalk.whiteBright(err.messageToSend),
       chalk.redBright(`\n Code:`),
       chalk.whiteBright(err.statusCode),
-      chalk.redBright(`\n Data: \n`),
+      chalk.redBright(`\n Data: ${err.extraData ? "\n" : ""}`),
       chalk.whiteBright(
         err.extraData
           ? Object.entries(err.extraData)
               .map((entry) => `  ${entry[0]}: ${entry[1]} \n`)
               .join("")
-          : "no data"
+          : "No Data"
       )
     );
   }
