@@ -77,7 +77,6 @@ describe("Given /auth/login endpoint", () => {
   describe("When it's called withOTP and eveything is correct", () => {
     test("Then it should respond with 200 and a token", async () => {
       const requestPath = "/auth/login";
-      process.env.DEBUG_VERBOSE = "true";
 
       const { body } = await request(app)
         .post(requestPath)

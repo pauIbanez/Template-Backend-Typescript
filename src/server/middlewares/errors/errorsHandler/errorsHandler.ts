@@ -29,6 +29,7 @@ const errorsHandler = (
 
   if (process.env.DEBUG_VERBOSE === "true") {
     debugToConsole(
+      " \n",
       chalk.redBright(`\n Error: `),
       chalk.whiteBright(err.name),
       chalk.redBright(`\n Message: `),

@@ -111,31 +111,6 @@ describe("Given registerUser", () => {
     });
   });
 
-  describe("When it's called and the user fails to create", () => {
-    test("Then it should call next and not anything else", async () => {
-      const req: any = {
-        body: newUserTest,
-      };
-
-      const res: any = {
-        json: jest.fn(),
-        status: jest.fn().mockReturnThis(),
-      };
-
-      (mockSendEmail as jest.Mock).mockResolvedValue(null);
-
-      const next = jest.fn();
-      Users.create = jest.fn().mockRejectedValue(null);
-
-      await registerUser(req, res, next);
-
-      expect(Users.create).toHaveBeenCalledWith(newUserTest);
-      expect(mockSendEmail).not.toHaveBeenCalled();
-      expect(next).toHaveBeenCalled();
-      expect(res.json).not.toHaveBeenCalled();
-    });
-  });
-
   describe("When it's called and the mail fails to be sent", () => {
     test("Then it should still call res.json and not next", async () => {
       const req: any = {

@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
+import { MongooseError } from "mongoose";
 import Users from "../../../../database/models/Users";
 import { CreatedUserData } from "../../../../types/userTypes/UserData";
 import sendEmail from "../../../utils/email";
@@ -7,6 +8,7 @@ import EmailData from "../../../utils/email/types";
 import { ActivationTokenPayload } from "../../../../types/authTypes/TokenPayload";
 import { userActivationExpirationInHours } from "../../../../data/serverConfig/server-config";
 import getUserActivationEmail from "../../../utils/email/emailBuilders/userActivationEmail";
+import { getDuplicateKeyRegistrationError } from "../../../../data/errorObjects/userErrors";
 
 const registerUser = async (
   req: Request,
@@ -53,7 +55,21 @@ const registerUser = async (
       message: "User registered sucessfully",
     });
   } catch (error) {
-    // If anything go next.
+    // Check if the error code is E11000, that means there's a duplicate key
+
+    if (
+      (error as MongooseError).name === "MongoServerError" &&
+      (error as MongooseError).message.includes("E11000")
+    ) {
+      const duplicateKeyError = getDuplicateKeyRegistrationError(
+        error as MongooseError,
+        req.body
+      );
+      next(duplicateKeyError);
+      return;
+    }
+
+    // If that's not the error simply go next
     next(error);
   }
 };
