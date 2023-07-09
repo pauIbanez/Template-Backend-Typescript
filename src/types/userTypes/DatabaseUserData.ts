@@ -7,7 +7,6 @@ interface DatabaseUserData extends Document {
   information: {
     firstName?: string;
     lastName?: string;
-    phoneNumber?: string;
     email: string;
     picture?: string;
     username: string;

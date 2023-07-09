@@ -11,6 +11,7 @@ describe("Given /auth/refreshToken ", () => {
   describe("When it's called with a valid token", () => {
     test("Then it should respond with a token", async () => {
       const requestPath = "/auth/refreshToken";
+
       const { body } = await request(app)
         .get(requestPath)
         .auth(getValidToken(tokenPayload), { type: "bearer" })
@@ -23,6 +24,7 @@ describe("Given /auth/refreshToken ", () => {
   describe("When it's called with an invalid token", () => {
     test("Then it should respond with 401", async () => {
       const requestPath = "/auth/refreshToken";
+
       const { body } = await request(app)
         .get(requestPath)
         .auth(getInvalidToken(), { type: "bearer" })

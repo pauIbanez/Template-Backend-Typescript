@@ -8,15 +8,21 @@ import app from "../../..";
 import connectToDB from "../../../../database";
 import Users from "../../../../database/models/Users";
 import {
-  disabledUserError,
+  expectedDisabledUserError,
   disabledUserLoginData,
-  genericLoginError,
+  expectedGenericLoginError,
   getTestUsers,
   missingUserLoginData,
-  noPasswordLoginData,
-  normalUserLoginData,
+  noNormalPasswordLoginData,
+  noOtpPasswordLoginData,
+  loginData,
   invalidPasswordLoginData,
-  otpUserLoginData,
+  loginDataWithOtp,
+  invalidOtpPasswordLoginData,
+  usernameLoginData,
+  invalidUsernameLoginData,
+  invalidLoginData,
+  expectedMissingEmailResponse,
 } from "./loginEndpoint.testObjects";
 
 let mongoServer: MongoMemoryServer;
@@ -33,7 +39,7 @@ afterAll(async () => {
 });
 
 beforeEach(async () => {
-  await Users.create(await getTestUsers());
+  await Users.create(getTestUsers());
 });
 
 afterEach(async () => {
@@ -42,75 +48,159 @@ afterEach(async () => {
 });
 
 describe("Given /auth/login endpoint", () => {
-  describe("When it's called and eveything is correct", () => {
-    test("The it should respond with 200 and a token", async () => {
+  describe("When it's called with correct loginData by email eveything is correct", () => {
+    test("Then it should respond with 200 and a token", async () => {
       const requestPath = "/auth/login";
 
       const { body } = await request(app)
         .post(requestPath)
-        .send(normalUserLoginData);
+        .send(loginData)
+        .expect(200);
+
+      expect(body.token).toBeTruthy();
+    });
+  });
+
+  describe("When it's called with correct loginData by username eveything is correct", () => {
+    test("Then it should respond with 200 and a token", async () => {
+      const requestPath = "/auth/login";
+
+      const { body } = await request(app)
+        .post(requestPath)
+        .send(usernameLoginData)
+        .expect(200);
 
       expect(body.token).toBeTruthy();
     });
   });
 
   describe("When it's called withOTP and eveything is correct", () => {
-    test("The it should respond with 200 and a token", async () => {
+    test("Then it should respond with 200 and a token", async () => {
       const requestPath = "/auth/login";
 
       const { body } = await request(app)
         .post(requestPath)
-        .send(otpUserLoginData);
+        .send(loginDataWithOtp)
+        .expect(200);
 
       expect(body.token).toBeTruthy();
     });
   });
 
   describe("When it's called with an invalid password", () => {
-    test("The it should respond with 401 and an error", async () => {
+    test("Then it should respond with 401 and an error", async () => {
       const requestPath = "/auth/login";
 
       const { body } = await request(app)
         .post(requestPath)
-        .send(invalidPasswordLoginData);
+        .send(invalidPasswordLoginData)
+        .expect(401);
 
-      expect(body).toMatchObject(genericLoginError);
+      expect(body).toMatchObject(expectedGenericLoginError);
     });
   });
 
   describe("When it's called and the user has no password", () => {
-    test("The it should respond with 401 and an error", async () => {
+    test("Then it should respond with 401 and an error", async () => {
       const requestPath = "/auth/login";
 
       const { body } = await request(app)
         .post(requestPath)
-        .send(noPasswordLoginData);
+        .send(noNormalPasswordLoginData)
+        .expect(401);
 
-      expect(body).toMatchObject(genericLoginError);
+      expect(body).toMatchObject(expectedGenericLoginError);
+    });
+  });
+
+  describe("When it's called with an invalid OTP password", () => {
+    test("Then it should respond with 401 and an error", async () => {
+      const requestPath = "/auth/login";
+
+      const { body } = await request(app)
+        .post(requestPath)
+        .send(invalidOtpPasswordLoginData)
+        .expect(401);
+
+      expect(body).toMatchObject(expectedGenericLoginError);
+    });
+  });
+
+  describe("When it's called and the user has no OTP password", () => {
+    test("Then it should respond with 401 and an error", async () => {
+      const requestPath = "/auth/login";
+
+      const { body } = await request(app)
+        .post(requestPath)
+        .send(noOtpPasswordLoginData)
+        .expect(401);
+
+      expect(body).toMatchObject(expectedGenericLoginError);
     });
   });
 
   describe("When it's called and the user is disabled", () => {
-    test("The it should respond with 401 and an error", async () => {
+    test("Then it should respond with 403 and an error", async () => {
       const requestPath = "/auth/login";
 
       const { body } = await request(app)
         .post(requestPath)
-        .send(disabledUserLoginData);
+        .send(disabledUserLoginData)
+        .expect(403);
 
-      expect(body).toMatchObject(disabledUserError);
+      expect(body).toMatchObject(expectedDisabledUserError);
+    });
+  });
+
+  describe("When it's called and the user is not yet active", () => {
+    test("Then it should respond with 403 and an error", async () => {
+      const requestPath = "/auth/login";
+
+      const { body } = await request(app)
+        .post(requestPath)
+        .send(disabledUserLoginData)
+        .expect(403);
+
+      expect(body).toMatchObject(expectedDisabledUserError);
     });
   });
 
   describe("When it's called and there is no user with that email", () => {
-    test("The it should respond with 401 and an error", async () => {
+    test("Then it should respond with 401 and an error", async () => {
       const requestPath = "/auth/login";
 
       const { body } = await request(app)
         .post(requestPath)
-        .send(missingUserLoginData);
+        .send(missingUserLoginData)
+        .expect(401);
 
-      expect(body).toMatchObject(genericLoginError);
+      expect(body).toMatchObject(expectedGenericLoginError);
+    });
+  });
+
+  describe("When it's called and there is no user with that username", () => {
+    test("Then it should respond with 401 and an error", async () => {
+      const requestPath = "/auth/login";
+
+      const { body } = await request(app)
+        .post(requestPath)
+        .send(invalidUsernameLoginData)
+        .expect(401);
+
+      expect(body).toMatchObject(expectedGenericLoginError);
+    });
+  });
+
+  describe("When it's called with invalid loginData", () => {
+    test("Then it should respond with 400 and an error", async () => {
+      const requestPath = "/auth/login";
+
+      const { body } = await request(app)
+        .post(requestPath)
+        .send(invalidLoginData)
+        .expect(400);
+
+      expect(body).toMatchObject(expectedMissingEmailResponse);
     });
   });
 });

@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
+import { MongooseError } from "mongoose";
 import Users from "../../../../database/models/Users";
 import { CreatedUserData } from "../../../../types/userTypes/UserData";
 import sendEmail from "../../../utils/email";
@@ -7,6 +8,7 @@ import EmailData from "../../../utils/email/types";
 import { ActivationTokenPayload } from "../../../../types/authTypes/TokenPayload";
 import { userActivationExpirationInHours } from "../../../../data/serverConfig/server-config";
 import getUserActivationEmail from "../../../utils/email/emailBuilders/userActivationEmail";
+import { getDuplicateKeyRegistrationError } from "../../../../data/errorObjects/userErrors";
 
 const registerUser = async (
   req: Request,
@@ -17,7 +19,6 @@ const registerUser = async (
     const newUser: CreatedUserData = req.body; // Get the user data from the req.body
 
     const createdUser = await Users.create(newUser); // Create the user in the Database.
-
     // Create the activationToken Payload.
     const tokenData: ActivationTokenPayload = {
       id: createdUser.id,
@@ -28,10 +29,6 @@ const registerUser = async (
       expiresIn: `${userActivationExpirationInHours}h`,
     });
 
-    // Add the verificationToken to the created user and save it.
-    createdUser.verificationToken = verificationToken;
-    createdUser.save();
-
     // Create the emailData object for the mail function.
     const emailData: EmailData = {
       html: getUserActivationEmail(verificationToken),
@@ -40,14 +37,39 @@ const registerUser = async (
       to: createdUser.information.email,
     };
 
-    await sendEmail(emailData); // Send the email.
+    try {
+      // Send the email.
+      await sendEmail(emailData);
+
+      // eslint-disable-next-line no-empty
+    } catch (e) {
+      // TODO: ADD SOME SORT OF BACKLOG FOR EMAIL RE-TRY
+    }
+
+    // Add the verificationToken to the created user and save it.
+    createdUser.verificationToken = verificationToken;
+    createdUser.save();
 
     // If everything is correct send a correct response.
-    res.json({
+    res.status(201).json({
       message: "User registered sucessfully",
     });
   } catch (error) {
-    // If anything go next.
+    // Check if the error code is E11000, that means there's a duplicate key
+    if (
+      (error as MongooseError).name &&
+      error.name === "MongoServerError" &&
+      error.message.includes("E11000")
+    ) {
+      const duplicateKeyError = getDuplicateKeyRegistrationError(
+        error as MongooseError,
+        req.body
+      );
+      next(duplicateKeyError);
+      return;
+    }
+
+    // If that's not the error simply go next
     next(error);
   }
 };

@@ -1,28 +1,21 @@
 import bcrypt from "bcrypt";
 import LoginData from "../../../../types/authTypes/loginData";
 
-const hashSalt = bcrypt.genSaltSync(10);
-
-export const tokenResponse = {
-  token: expect.any(String),
-};
-
-export const nativeError = {
-  message: "Something broke",
-};
-
-export const disabledUserId = "622f00e91e85099995d63b04";
-export const validUserId = "622f00e91e85099995d63b03";
-export const noPasswordUserId = "622f00e91e85099995d63b02";
+export const normalUserId = "622f00e91e85099995d63b01";
+export const disabledUserId = "622f00e91e85099995d63b02";
+export const noPasswordUserId = "622f00e91e85099995d63b04";
+export const notActiveUserId = "622f00e91e85099995d63b05";
 
 const validUserEmail = "testing@email.com";
 const disabledUserEmail = "disabled@email.com";
 export const missingUserEmail = "missing@email.com";
 const noPasswordUserEmail = "nopassword@email.com";
+const notActiveUserEmail = "notActive@email.com";
 
 const validPassword = "1234";
 const invalidPassword = "1nv4l1dP455w0rd1r0n1c4ll9MuchM0r353cur3";
 
+const hashSalt = bcrypt.genSaltSync(10);
 export const validHashedPassword = bcrypt.hashSync(validPassword, hashSalt);
 export const invalidHashedPasword = bcrypt.hashSync(invalidPassword, hashSalt);
 
@@ -68,8 +61,15 @@ export const loginDataWithOtp: LoginData = {
   password: validPassword,
   withOtp: true,
 };
+
+export const notActiveUserLoginData: LoginData = {
+  email: notActiveUserEmail,
+  password: validPassword,
+};
+
 export const getTestUsers = () => ({
   normalUser: {
+    id: normalUserId,
     information: {
       firstName: "test",
       lastName: "user",
@@ -82,6 +82,7 @@ export const getTestUsers = () => ({
     },
   },
   otpUser: {
+    id: normalUserId,
     information: {
       firstName: "test",
       lastName: "user",
@@ -95,17 +96,19 @@ export const getTestUsers = () => ({
     save: jest.fn(),
   },
   noPasswordUser: {
+    id: noPasswordUserId,
     information: {
       firstName: "test",
       lastName: "user",
-      email: validUserEmail,
+      email: noPasswordUserEmail,
     },
 
     credentials: {
-      email: validUserEmail,
+      email: noPasswordUserEmail,
     },
   },
   disabledUser: {
+    id: disabledUserId,
     information: {
       firstName: "test",
       lastName: "user",
@@ -117,5 +120,20 @@ export const getTestUsers = () => ({
       password: validHashedPassword,
     },
     isDisabled: true,
+  },
+  notActiveUser: {
+    id: notActiveUserId,
+    information: {
+      firstName: "test",
+      lastName: "user",
+      email: notActiveUserEmail,
+    },
+
+    credentials: {
+      email: notActiveUserEmail,
+      password: validHashedPassword,
+    },
+    isDisabled: false,
+    verificationToken: "ayooo",
   },
 });

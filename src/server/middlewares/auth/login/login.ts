@@ -4,8 +4,9 @@ import Users from "../../../../database/models/Users";
 import LoginData from "../../../../types/authTypes/loginData";
 import {
   getInvalidPasswordError,
+  getNotYetActivatedError,
   getUserDisabledError,
-  getUserNotFoundForEmailError,
+  getUserNotFoundForUsernameOrEmailError,
 } from "../../../../data/errorObjects/userErrors";
 
 import DatabaseUserData from "../../../../types/userTypes/DatabaseUserData";
@@ -29,7 +30,7 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
 
     // If no user matches the email or username write the error and go next.
     if (!foundUser) {
-      const userNotFoundForEmailError = getUserNotFoundForEmailError(
+      const userNotFoundForEmailError = getUserNotFoundForUsernameOrEmailError(
         loginData.email
       );
       next(userNotFoundForEmailError);
@@ -55,7 +56,7 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
       // Check if the OTP is valid.
       const isPasswordValid = await bcrypt.compare(
         loginData.password,
-        foundUser.credentials.otpPassword as string
+        foundUser.credentials.otpPassword
       );
 
       // If the password is invalid go next with the invalid password error written previously.
@@ -77,7 +78,7 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
       // Check if the password is valid.
       const isPasswordValid = await bcrypt.compare(
         loginData.password.toString(),
-        foundUser.credentials.password as string
+        foundUser.credentials.password
       );
 
       // If the  DB user does not have a password go next with the invalid password error written previously.
@@ -87,21 +88,17 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
       }
     }
 
+    // If the login is correct but the user is not yet activated write the error and go next
+    if (foundUser.verificationToken) {
+      const notActiveError = getNotYetActivatedError(foundUser.id);
+      next(notActiveError);
+      return;
+    }
+
     // If every check has passed write the user id in the res.locals object and go next.
     res.locals.userId = foundUser.id;
+
     next();
-
-    // // If every check is passed, write the payload with the id of the user and a token refresh time.
-    // const tokenData: TokenPayload = {
-    //   id: foundUser.id,
-    //   tokenRefreshTime: userSessionRefresh,
-    // };
-
-    // // This created the token with the previously created payload.
-    // const newToken = jwt.sign(tokenData, process.env.TOKEN_SECRET, {
-    //   expiresIn: userSessionDuration,
-    // });
-    // res.json({ token: newToken }); // Send the token as the response.
   } catch (error) {
     next(error); // If anything throws and error, pass it on to the next function.
   }

@@ -22,9 +22,7 @@ const registrationDataValidator = (
 
   // If the validation fails write an error and go next.
   if (error) {
-    const detailsString = error.details
-      .map((detail) => detail.message)
-      .join(", ");
+    const detailsString = error.details.map((detail) => detail.message);
     const invalidRegistrationdataDataError =
       getInvalidRegistrationDataError(detailsString);
 

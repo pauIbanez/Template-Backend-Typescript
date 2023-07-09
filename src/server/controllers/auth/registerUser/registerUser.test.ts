@@ -1,106 +1,166 @@
-// import { getUserNotFoundError } from "../../../../data/errorObjects/userErrors";
-// import registerUser from "./registerUser";
-// import {
-//   accountId,
-//   accountUsers,
-//   expectedUserInformation,
-//   getModifiableAccountUsers,
-//   missingUserId,
-//   registerCompleatedUserId,
-//   registrationData,
-//   savingError,
-//   successResponse,
-//   validUserId,
-// } from "./registerUser.testObjects";
+import Users from "../../../../database/models/Users";
+import sendEmail from "../../../utils/email";
 
-// describe("Given registerUser", () => {
-//   describe("When it's called and eveything is ok", () => {
-//     test("Then it should call res.json with a success message and put the request data to the user", async () => {
-//       const req: any = {
-//         body: registrationData,
-//       };
+import registerUser from "./registerUser";
+import {
+  createdUserTest,
+  expectedDuplicateUsernameError,
+  expectedMailData,
+  mockMongooseError,
+  newUserTest,
+  successResponse,
+} from "./registerUser.testObjects";
 
-//       const modifiableAccountUsers = getModifiableAccountUsers();
-//       const user = modifiableAccountUsers.users[0];
+jest.mock("../../../../database/models/Users");
+jest.mock("../../../utils/email");
 
-//       const res: any = {
-//         json: jest.fn(),
-//         locals: {
-//           accountId,
-//           userId: validUserId,
-//           accountUsers: modifiableAccountUsers,
-//         },
-//       };
+const mockSendEmail = sendEmail as jest.Mocked<typeof sendEmail>;
 
-//       const next = jest.fn();
+let modifiableCreatedUser: any;
 
-//       await registerUser(req, res, next);
+beforeEach(() => {
+  jest.resetAllMocks();
 
-//       expect(next).not.toHaveBeenCalled();
-//       expect(res.json).toHaveBeenCalledWith(successResponse);
-//       expect(user.information).toMatchObject(expectedUserInformation);
-//       expect(user.toCompleteRegister).toBe(false);
-//       expect((user.credentials as any).password).toBeTruthy();
-//     });
-//   });
+  modifiableCreatedUser = { ...createdUserTest };
+});
 
-//   describe("When it's called and the user is not found", () => {
-//     test("Then it should call next with an error", async () => {
-//       const expectedError = getUserNotFoundError(accountId, missingUserId);
+describe("Given registerUser", () => {
+  describe("When it's called and eveything is ok", () => {
+    test("Then it should call Users.create with the createdUser and call res.json with a success message", async () => {
+      const req: any = {
+        body: newUserTest,
+      };
 
-//       const req: any = {
-//         body: registrationData,
-//       };
+      const res: any = {
+        json: jest.fn(),
+        status: jest.fn().mockReturnThis(),
+      };
 
-//       const res: any = {
-//         json: jest.fn(),
-//         locals: {
-//           accountId,
-//           userId: missingUserId,
-//           accountUsers,
-//         },
-//       };
+      (mockSendEmail as jest.Mock).mockResolvedValue(null);
 
-//       const next = jest.fn();
+      const next = jest.fn();
+      Users.create = jest.fn().mockResolvedValue(modifiableCreatedUser);
 
-//       await registerUser(req, res, next);
+      await registerUser(req, res, next);
 
-//       expect(next).toHaveBeenCalledWith(expectedError);
-//       expect(res.json).not.toHaveBeenCalled();
-//     });
-//   });
+      expect(mockSendEmail).toHaveBeenCalled();
+      expect(next).not.toHaveBeenCalled();
+      expect(Users.create).toHaveBeenCalledWith(newUserTest);
+      expect(res.json).toHaveBeenCalledWith(successResponse);
+      expect(res.status).toHaveBeenCalledWith(201);
+    });
 
-//   describe("When it's called and the accountUsers saving fails", () => {
-//     test("Then it should call next with an error", async () => {
-//       const expectedError = getSavingAccountUsersError(
-//         accountId,
-//         savingError.message
-//       );
+    test("Then it should create the correct MailData and call sendEmail with it", async () => {
+      const req: any = {
+        body: newUserTest,
+      };
 
-//       const req: any = {
-//         body: registrationData,
-//       };
+      const res: any = {
+        json: jest.fn(),
+        status: jest.fn().mockReturnThis(),
+      };
 
-//       const modifiableAccountUsers = getModifiableAccountUsers();
+      (mockSendEmail as jest.Mock).mockResolvedValue(null);
 
-//       const res: any = {
-//         json: jest.fn(),
-//         locals: {
-//           accountId,
-//           userId: validUserId,
-//           accountUsers: modifiableAccountUsers,
-//         },
-//       };
+      Users.create = jest.fn().mockResolvedValue(modifiableCreatedUser);
 
-//       const next = jest.fn();
-//       modifiableAccountUsers.save.mockImplementation(() => {
-//         throw savingError;
-//       });
+      await registerUser(req, res, null);
 
-//       await registerUser(req, res, next);
+      expect(mockSendEmail).toHaveBeenCalledWith(expectedMailData);
+    });
 
-//       expect(next).toHaveBeenCalledWith(expectedError);
-//       expect(res.json).not.toHaveBeenCalled();
-//     });
-//   });
-// });
+    test("Then it should create a verification token, put it in the created user and call save", async () => {
+      const req: any = {
+        body: newUserTest,
+      };
+
+      const res: any = {
+        json: jest.fn(),
+        status: jest.fn().mockReturnThis(),
+      };
+
+      (mockSendEmail as jest.Mock).mockResolvedValue(null);
+
+      Users.create = jest.fn().mockResolvedValue(modifiableCreatedUser);
+
+      await registerUser(req, res, null);
+
+      expect((modifiableCreatedUser as any).verificationToken).toBeTruthy();
+      expect(createdUserTest.save).toHaveBeenCalled();
+    });
+  });
+
+  describe("When it's called and the user fails to create just because", () => {
+    test("Then it should call next and not anything else", async () => {
+      const req: any = {
+        body: newUserTest,
+      };
+
+      const res: any = {
+        json: jest.fn(),
+      };
+
+      (mockSendEmail as jest.Mock).mockResolvedValue(null);
+
+      const next = jest.fn();
+      Users.create = jest.fn().mockRejectedValue({});
+
+      await registerUser(req, res, next);
+
+      expect(Users.create).toHaveBeenCalledWith(newUserTest);
+      expect(mockSendEmail).not.toHaveBeenCalled();
+      expect(next).toHaveBeenCalled();
+      expect(res.json).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("When it's called and the user fails to create because of duplicate key", () => {
+    test("Then it should call next with an error", async () => {
+      const req: any = {
+        body: newUserTest,
+      };
+
+      const res: any = {
+        json: jest.fn(),
+      };
+
+      (mockSendEmail as jest.Mock).mockResolvedValue(null);
+
+      const next = jest.fn();
+      Users.create = jest.fn().mockRejectedValue(mockMongooseError);
+
+      await registerUser(req, res, next);
+
+      expect(Users.create).toHaveBeenCalledWith(newUserTest);
+      expect(mockSendEmail).not.toHaveBeenCalled();
+      expect(next).toHaveBeenCalledWith(expectedDuplicateUsernameError);
+      expect(res.json).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("When it's called and the mail fails to be sent", () => {
+    test("Then it should still call res.json and not next", async () => {
+      const req: any = {
+        body: newUserTest,
+      };
+
+      const res: any = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+      };
+
+      (mockSendEmail as jest.Mock).mockRejectedValue(null);
+
+      const next = jest.fn();
+      Users.create = jest.fn().mockResolvedValue(modifiableCreatedUser);
+
+      await registerUser(req, res, next);
+
+      expect(Users.create).toHaveBeenCalledWith(newUserTest);
+      expect(mockSendEmail).toHaveBeenCalled();
+      expect(next).not.toHaveBeenCalled();
+      expect(res.status).toHaveBeenCalledWith(201);
+      expect(res.json).toHaveBeenCalledWith(successResponse);
+    });
+  });
+});
