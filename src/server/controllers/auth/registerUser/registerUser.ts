@@ -56,9 +56,9 @@ const registerUser = async (
     });
   } catch (error) {
     // Check if the error code is E11000, that means there's a duplicate key
-
     if (
-      (error as MongooseError).name === "MongoServerError" &&
+      ((error as MongooseError).name && (error as MongooseError).name) ===
+        "MongoServerError" &&
       (error as MongooseError).message.includes("E11000")
     ) {
       const duplicateKeyError = getDuplicateKeyRegistrationError(

@@ -4,7 +4,9 @@ import sendEmail from "../../../utils/email";
 import registerUser from "./registerUser";
 import {
   createdUserTest,
+  expectedDuplicateUsernameError,
   expectedMailData,
+  mockMongooseError,
   newUserTest,
   successResponse,
 } from "./registerUser.testObjects";
@@ -45,6 +47,7 @@ describe("Given registerUser", () => {
       expect(next).not.toHaveBeenCalled();
       expect(Users.create).toHaveBeenCalledWith(newUserTest);
       expect(res.json).toHaveBeenCalledWith(successResponse);
+      expect(res.status).toHaveBeenCalledWith(201);
     });
 
     test("Then it should create the correct MailData and call sendEmail with it", async () => {
@@ -87,7 +90,7 @@ describe("Given registerUser", () => {
     });
   });
 
-  describe("When it's called and the user fails to create", () => {
+  describe("When it's called and the user fails to create just because", () => {
     test("Then it should call next and not anything else", async () => {
       const req: any = {
         body: newUserTest,
@@ -100,13 +103,37 @@ describe("Given registerUser", () => {
       (mockSendEmail as jest.Mock).mockResolvedValue(null);
 
       const next = jest.fn();
-      Users.create = jest.fn().mockRejectedValue(null);
+      Users.create = jest.fn().mockRejectedValue({});
 
       await registerUser(req, res, next);
 
       expect(Users.create).toHaveBeenCalledWith(newUserTest);
       expect(mockSendEmail).not.toHaveBeenCalled();
       expect(next).toHaveBeenCalled();
+      expect(res.json).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("When it's called and the user fails to create because of duplicate key", () => {
+    test("Then it should call next with an error", async () => {
+      const req: any = {
+        body: newUserTest,
+      };
+
+      const res: any = {
+        json: jest.fn(),
+      };
+
+      (mockSendEmail as jest.Mock).mockResolvedValue(null);
+
+      const next = jest.fn();
+      Users.create = jest.fn().mockRejectedValue(mockMongooseError);
+
+      await registerUser(req, res, next);
+
+      expect(Users.create).toHaveBeenCalledWith(newUserTest);
+      expect(mockSendEmail).not.toHaveBeenCalled();
+      expect(next).toHaveBeenCalledWith(expectedDuplicateUsernameError);
       expect(res.json).not.toHaveBeenCalled();
     });
   });
@@ -118,6 +145,7 @@ describe("Given registerUser", () => {
       };
 
       const res: any = {
+        status: jest.fn().mockReturnThis(),
         json: jest.fn(),
       };
 
@@ -131,6 +159,7 @@ describe("Given registerUser", () => {
       expect(Users.create).toHaveBeenCalledWith(newUserTest);
       expect(mockSendEmail).toHaveBeenCalled();
       expect(next).not.toHaveBeenCalled();
+      expect(res.status).toHaveBeenCalledWith(201);
       expect(res.json).toHaveBeenCalledWith(successResponse);
     });
   });
