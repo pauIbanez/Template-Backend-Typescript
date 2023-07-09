@@ -19,8 +19,8 @@ afterEach(() => {
 export const getValidToken = (tokenPayload?: TokenPayload) =>
   jwt.sign(
     tokenPayload || {
-      accountId: "",
       id: "",
+      tokenRefreshTime: 1,
     },
     process.env.TOKEN_SECRET as string
   );
