@@ -2,6 +2,7 @@ import hashPassword from "../../../utils/auth/hashPassword/hashPassword";
 import createUser from "./userCreator";
 import {
   expectedCreatedUser,
+  expectedLocals,
   mockHashedPassword,
   testUserRegistrationData,
 } from "./userCreator.testObjects";
@@ -16,15 +17,35 @@ describe("Given userCreator", () => {
       const req: any = {
         body: testUserRegistrationData,
       };
+      const res: any = {
+        locals: {},
+      };
 
       (mockHashPassword as jest.Mock).mockResolvedValue(mockHashedPassword);
 
       const next = jest.fn();
 
-      await createUser(req, null, next);
+      await createUser(req, res, next);
 
       expect(next).toHaveBeenCalledWith();
       expect(req.body).toEqual(expectedCreatedUser);
+      expect(res.locals).toEqual(expectedLocals);
+    });
+    test("This it should put the email and username in res.locals with goNext set to true", async () => {
+      const req: any = {
+        body: testUserRegistrationData,
+      };
+      const res: any = {
+        locals: {},
+      };
+
+      (mockHashPassword as jest.Mock).mockResolvedValue(mockHashedPassword);
+
+      const next = jest.fn();
+
+      await createUser(req, res, next);
+
+      expect(res.locals).toEqual(expectedLocals);
     });
   });
 

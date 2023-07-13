@@ -36,3 +36,9 @@ export const expectedCreatedUser: CreatedUserData = {
     password: mockHashedPassword,
   },
 };
+
+export const expectedLocals = {
+  email,
+  username,
+  goNext: true,
+};

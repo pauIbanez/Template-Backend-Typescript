@@ -7,6 +7,7 @@ export const authEndpoints = <const>{
   login: "/login",
   register: "/register",
   refreshToken: "/refreshToken",
+  checkKeys: "/checkKeys",
 };
 
 export const userEndpoints = <const>{

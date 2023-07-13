@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
-import { getInvalidRegistrationDataError } from "../../../../data/errorObjects/dataValidationErrors";
-import registrationData from "../../../../data/joiObjects/restrationData";
+import { getInvalidKeyCheckData } from "../../../../data/errorObjects/dataValidationErrors";
+import keyCheckerData from "../../../../data/joiObjects/keyCheckerData";
 
-const registrationDataValidator = (
+const keyCheckerDataValidator = (
   req: Request,
   res: Response,
   next: NextFunction
@@ -15,7 +15,7 @@ const registrationDataValidator = (
   };
 
   // Use the registrationData Joi object to validate the request body. (This object is found in data/JoiObjects)
-  const { error, value } = registrationData.validate(
+  const { error, value } = keyCheckerData.validate(
     req.body,
     joiValidationOptions
   );
@@ -23,17 +23,16 @@ const registrationDataValidator = (
   // If the validation fails write an error and go next.
   if (error) {
     const detailsString = error.details.map((detail) => detail.message);
-    const invalidRegistrationdataDataError =
-      getInvalidRegistrationDataError(detailsString);
+    const invalidKeyCheckData = getInvalidKeyCheckData(detailsString);
 
-    next(invalidRegistrationdataDataError);
+    next(invalidKeyCheckData);
     return;
   }
 
-  // If the validation is correct we override the request body with the validated object and go next.
-  req.body = value;
-
+  // If the validation is correct we put the validated Id in the res.locals
+  res.locals = value;
+  res.locals.goNext = false;
   next();
 };
 
-export default registrationDataValidator;
+export default keyCheckerDataValidator;

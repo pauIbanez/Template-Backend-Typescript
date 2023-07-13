@@ -4,7 +4,6 @@ import sendEmail from "../../../utils/email";
 import registerUser from "./registerUser";
 import {
   createdUserTest,
-  expectedDuplicateUsernameError,
   expectedMailData,
   newUserTest,
   successResponse,
@@ -38,7 +37,6 @@ describe("Given registerUser", () => {
       (mockSendEmail as jest.Mock).mockResolvedValue(null);
 
       const next = jest.fn();
-      Users.find = jest.fn().mockResolvedValue([]);
       Users.create = jest.fn().mockResolvedValue(modifiableCreatedUser);
 
       await registerUser(req, res, next);
@@ -62,7 +60,6 @@ describe("Given registerUser", () => {
 
       (mockSendEmail as jest.Mock).mockResolvedValue(null);
 
-      Users.find = jest.fn().mockResolvedValue([]);
       Users.create = jest.fn().mockResolvedValue(modifiableCreatedUser);
 
       await registerUser(req, res, null);
@@ -82,7 +79,6 @@ describe("Given registerUser", () => {
 
       (mockSendEmail as jest.Mock).mockResolvedValue(null);
 
-      Users.find = jest.fn().mockResolvedValue([]);
       Users.create = jest.fn().mockResolvedValue(modifiableCreatedUser);
 
       await registerUser(req, res, null);
@@ -105,7 +101,6 @@ describe("Given registerUser", () => {
       (mockSendEmail as jest.Mock).mockResolvedValue(null);
 
       const next = jest.fn();
-      Users.find = jest.fn().mockResolvedValue([]);
       Users.create = jest.fn().mockRejectedValue({});
 
       await registerUser(req, res, next);
@@ -113,32 +108,6 @@ describe("Given registerUser", () => {
       expect(Users.create).toHaveBeenCalledWith(newUserTest);
       expect(mockSendEmail).not.toHaveBeenCalled();
       expect(next).toHaveBeenCalled();
-      expect(res.json).not.toHaveBeenCalled();
-    });
-  });
-
-  describe("When it's called and the user fails to create because of duplicate key", () => {
-    test("Then it should call next with an error", async () => {
-      const req: any = {
-        body: createdUserTest,
-      };
-
-      const res: any = {
-        json: jest.fn(),
-      };
-
-      (mockSendEmail as jest.Mock).mockResolvedValue(null);
-
-      const next = jest.fn();
-      Users.find = jest.fn().mockResolvedValue([createdUserTest]);
-      Users.create = jest.fn().mockResolvedValue(null);
-
-      await registerUser(req, res, next);
-
-      expect(Users.find).toHaveBeenCalled();
-      expect(Users.create).not.toHaveBeenCalled();
-      expect(mockSendEmail).not.toHaveBeenCalled();
-      expect(next).toHaveBeenCalledWith(expectedDuplicateUsernameError);
       expect(res.json).not.toHaveBeenCalled();
     });
   });
@@ -157,7 +126,6 @@ describe("Given registerUser", () => {
       (mockSendEmail as jest.Mock).mockRejectedValue(null);
 
       const next = jest.fn();
-      Users.find = jest.fn().mockResolvedValue([]);
       Users.create = jest.fn().mockResolvedValue(modifiableCreatedUser);
 
       await registerUser(req, res, next);

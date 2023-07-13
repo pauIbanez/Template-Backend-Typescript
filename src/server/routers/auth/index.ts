@@ -7,6 +7,8 @@ import { endpoints } from "../../../data/serverConfig/endpoints";
 import registrationDataValidator from "../../middlewares/requestPayloadValidators/registrationDataValidator/registrationDataValidator";
 import registerUser from "../../controllers/auth/registerUser/registerUser";
 import createUser from "../../middlewares/auth/userCreator/userCreator";
+import duplicateKeyChecker from "../../middlewares/auth/keyChecker/duplicateKeyChecker";
+import keyCheckerDataValidator from "../../middlewares/requestPayloadValidators/keyCheckerDataValidator/keyCheckerDataValidator";
 
 // Router creation
 const authRouter = express.Router();
@@ -22,7 +24,14 @@ authRouter.post(
   routerEndpoints.register,
   registrationDataValidator,
   createUser,
+  duplicateKeyChecker,
   registerUser
+);
+
+authRouter.post(
+  routerEndpoints.checkKeys,
+  keyCheckerDataValidator,
+  duplicateKeyChecker
 );
 
 export default authRouter;
