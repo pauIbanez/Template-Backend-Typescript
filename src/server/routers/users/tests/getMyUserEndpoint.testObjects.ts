@@ -6,15 +6,15 @@ export const myTestUserId = "622f00e91e85099995d63b01";
 export const myTestUser: CreatedUserData = {
   _id: myTestUserId,
   information: {
-    email: "testuser@email.com",
-    username: "testuser",
+    email: "mytestUser@email.com",
+    username: "myTestuser",
     firstName: "test",
     lastName: "user",
     picture: "picture",
   },
   credentials: {
-    email: "testuser@email.com",
-    username: "testuser",
+    email: "mytestUser@email.com",
+    username: "myTestuser",
     password: "password",
   },
   isDisabled: false,
@@ -25,14 +25,14 @@ export const getTestUsers = () => [
   myTestUser,
   {
     information: {
-      email: "testuser2@email.com",
-      username: "testuser2",
+      email: "notMyTestuser@email.com",
+      username: "notMyTestuser",
       firstName: "test",
       lastName: "user2",
       picture: "picture",
     },
     credentials: {
-      email: "testuse2r@email.com",
+      email: "notMyTestuser@email.com",
       username: "testuser2",
       password: "password",
     },
@@ -44,8 +44,8 @@ export const getTestUsers = () => [
 export const expectedCorrectResponse = {
   id: myTestUserId,
   information: {
-    email: "testuser@email.com",
-    username: "testuser",
+    email: "mytestUser@email.com",
+    username: "myTestuser",
     firstName: "test",
     lastName: "user",
     picture: "picture",

@@ -2,14 +2,14 @@ import ControledError from "../../../../data/errorObjects/ControledError";
 import { ErrorSeverety } from "../../../../types/errorTypes/ServerError";
 
 export const myUserTestId = "64afdf0aed1013ef00aed663";
-export const missingUserTestId = "64afdf0aed1013ef00aed664";
+export const missingUserTestId = "64afdf0aed1013ef00aed665";
 
 export const foundTestUser = {
   information: {
-    firstName: "test",
+    firstName: "mytest",
     lastName: "user",
-    username: "testUser2",
-    email: "testUser2@email.com",
+    username: "mytestuser",
+    email: "mytestuser@email.com",
     picture: "bruhg",
   },
   id: myUserTestId,
