@@ -40,6 +40,11 @@ const verifyUser = async (req: Request, res: Response, next: NextFunction) => {
       return;
     }
 
+    if (foundUser.verificationToken !== verificationToken) {
+      const invalidTokenError = getInvalidVerificationTokenError();
+      next(invalidTokenError);
+    }
+
     delete foundUser.verificationToken;
     foundUser.save();
 
