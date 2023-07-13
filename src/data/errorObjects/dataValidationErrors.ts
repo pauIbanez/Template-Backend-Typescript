@@ -41,3 +41,15 @@ export const getInvalidGetUserDataError = (
       errors: messages.join(", "),
     },
   });
+
+export const getInvalidKeyCheckData = (messages: string[]): ControledError =>
+  new ControledError({
+    name: "INVALIDKEYCHECKDATA",
+    message: "Invalid key check data",
+    statusCode: 400,
+    messageToSend: `Invalid data: ${messages.join(", ")}`,
+    severety: ErrorSeverety.low,
+    extraData: {
+      errors: messages.join(", "),
+    },
+  });
