@@ -77,7 +77,7 @@ const getDuplicateKey = (message: string): string => {
 
 export const getDuplicateKeyRegistrationError = (
   error: MongooseError,
-  registrarionData?: CreatedUserData
+  registrarionData: CreatedUserData
 ): ControledError =>
   new ControledError({
     name: "DUPLICATEKEY",
@@ -89,8 +89,8 @@ export const getDuplicateKeyRegistrationError = (
     }${error.message.includes("email") ? "Email is already in use" : ""}`,
     extraData: (() => {
       if (getDuplicateKey(error.message) === "Username") {
-        return { username: registrarionData!.information.username };
+        return { username: registrarionData.information.username };
       }
-      return { email: registrarionData!.information.email };
+      return { email: registrarionData.information.email };
     })(),
   });
