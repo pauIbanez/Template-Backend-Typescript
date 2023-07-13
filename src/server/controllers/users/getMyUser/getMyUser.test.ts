@@ -3,7 +3,7 @@ import getMyUser from "./getMyUser";
 import {
   expectedError,
   foundTestUser,
-  missingUserTestId,
+  missingOtherUserTestId,
   myUserTestId,
   thrownError,
 } from "./getMyUser.testObjects";
@@ -42,7 +42,7 @@ describe("Given getMyUser", () => {
       const res: any = {
         json: jest.fn(),
         locals: {
-          userId: missingUserTestId,
+          userId: missingOtherUserTestId,
         },
       };
 
@@ -54,7 +54,7 @@ describe("Given getMyUser", () => {
       await getMyUser(null, res, next);
 
       expect(next).toHaveBeenCalledWith(expectedError);
-      expect(Users.findById).toHaveBeenCalledWith(missingUserTestId);
+      expect(Users.findById).toHaveBeenCalledWith(missingOtherUserTestId);
       expect(res.json).not.toHaveBeenCalled();
     });
   });
@@ -64,7 +64,7 @@ describe("Given getMyUser", () => {
       const res: any = {
         json: jest.fn(),
         locals: {
-          userId: missingUserTestId,
+          userId: missingOtherUserTestId,
         },
       };
 
@@ -76,7 +76,7 @@ describe("Given getMyUser", () => {
       await getMyUser(null, res, next);
 
       expect(next).toHaveBeenCalledWith(thrownError);
-      expect(Users.findById).toHaveBeenCalledWith(missingUserTestId);
+      expect(Users.findById).toHaveBeenCalledWith(missingOtherUserTestId);
       expect(res.json).not.toHaveBeenCalled();
     });
   });
