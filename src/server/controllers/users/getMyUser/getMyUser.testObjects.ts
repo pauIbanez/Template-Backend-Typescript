@@ -2,15 +2,15 @@ import ControledError from "../../../../data/errorObjects/ControledError";
 import { ErrorSeverety } from "../../../../types/errorTypes/ServerError";
 
 export const myUserTestId = "64afdf0aed1013ef00aed663";
-export const missingUserTestId = "64afdf0aed1013ef00aed665";
+export const missingOtherUserTestId = "64afdf0aed1013ef00aed665";
 
 export const foundTestUser = {
   information: {
     firstName: "mytest",
-    lastName: "user",
+    lastName: "user2",
     username: "mytestuser",
     email: "mytestuser@email.com",
-    picture: "bruhg",
+    picture: "asdas",
   },
   id: myUserTestId,
 };
@@ -22,8 +22,8 @@ export const expectedError = new ControledError({
   messageToSend: "User not found",
   severety: ErrorSeverety.low,
   extraData: {
-    userId: missingUserTestId,
+    userId: missingOtherUserTestId,
   },
 });
 
-export const thrownError = new Error("something broke");
+export const thrownError = new Error("something broke myUser");

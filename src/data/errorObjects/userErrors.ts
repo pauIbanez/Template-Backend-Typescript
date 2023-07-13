@@ -67,26 +67,30 @@ export const getInvalidPasswordError = (userId: string): ControledError =>
     },
   });
 
+const getDuplicateKey = (message: string): string => {
+  if (message.includes("username")) {
+    return "Username";
+  }
+
+  return "Email";
+};
+
 export const getDuplicateKeyRegistrationError = (
   error: MongooseError,
-  registrarionData?: CreatedUserData
+  registrarionData: CreatedUserData
 ): ControledError =>
   new ControledError({
     name: "DUPLICATEKEY",
-    message: `Duplicate key/s: ${
-      error.message.includes("username") ? "Username" : ""
-    }${error.message.includes("email") ? "Email" : ""}`,
+    message: `Duplicate key/s: ${getDuplicateKey(error.message)}`,
     severety: ErrorSeverety.low,
     statusCode: 400,
     messageToSend: `${
-      error.message.includes("username") ? "Username is already in use " : ""
-    }${error.message.includes("email") ? "Email is already in use " : ""}`,
+      error.message.includes("username") ? "Username is already in use" : ""
+    }${error.message.includes("email") ? "Email is already in use" : ""}`,
     extraData: (() => {
-      const createdData: any = {};
-      if (error.message.includes("username"))
-        createdData.username = registrarionData?.information?.username;
-      if (error.message.includes("email"))
-        createdData.email = registrarionData?.information?.email;
-      return createdData;
+      if (getDuplicateKey(error.message) === "Username") {
+        return { username: registrarionData.information.username };
+      }
+      return { email: registrarionData.information.email };
     })(),
   });

@@ -26,7 +26,7 @@ export const expectedDuplicateUsernameError: ControledError =
     message: "Duplicate key/s: Username",
     severety: ErrorSeverety.low,
     statusCode: 400,
-    messageToSend: "Username is already in use ",
+    messageToSend: "Username is already in use",
     extraData: {
       username: createdUserUsername,
     },

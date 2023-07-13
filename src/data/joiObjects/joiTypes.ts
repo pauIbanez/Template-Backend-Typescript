@@ -2,5 +2,4 @@
 
 import Joi from "joi";
 
-export const JoiObjectId = (message?: string) =>
-  Joi.string().regex(/^[0-9a-fA-F]{24}$/, message);
+export const JoiObjectId = () => Joi.string().alphanum().length(24);
