@@ -26,6 +26,7 @@ const registerUser = async (
         { "information.username": newUser.information.username },
       ],
     });
+    console.log(usersWithKeysFound);
 
     if (usersWithKeysFound) {
       const duplicatedKeys: DuplicatedKeys = {
@@ -44,7 +45,6 @@ const registerUser = async (
 
       const duplicatedKeysError =
         getDuplicateKeyRegistrationError(duplicatedKeys);
-
       next(duplicatedKeysError);
       return;
     }

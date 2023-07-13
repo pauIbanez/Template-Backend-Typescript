@@ -23,12 +23,12 @@ export const mockMongooseError: MongooseError = {
 export const expectedDuplicateUsernameError: ControledError =
   new ControledError({
     name: "DUPLICATEKEY",
-    message: "Duplicate key/s: Username",
+    message: "Duplicate key/s: Email, Username",
     severety: ErrorSeverety.low,
     statusCode: 400,
-    messageToSend: "Username is already in use",
+    messageToSend: "Duplicated keys Email, Username",
     extraData: {
-      username: createdUserUsername,
+      keys: expect.arrayContaining(["Username", "Email"]),
     },
   });
 
