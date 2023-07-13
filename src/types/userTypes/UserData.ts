@@ -15,6 +15,7 @@ interface UserData {
 }
 
 export interface CreatedUserData {
+  _id?: string;
   information: {
     firstName?: string;
     lastName?: string;
