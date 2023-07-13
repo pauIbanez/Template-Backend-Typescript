@@ -26,9 +26,8 @@ const registerUser = async (
         { "information.username": newUser.information.username },
       ],
     });
-    console.log(usersWithKeysFound);
 
-    if (usersWithKeysFound) {
+    if (usersWithKeysFound.length) {
       const duplicatedKeys: DuplicatedKeys = {
         email: false,
         username: false,

@@ -1,4 +1,3 @@
-import { MongooseError } from "mongoose";
 import ControledError from "../../../../data/errorObjects/ControledError";
 import { ErrorSeverety } from "../../../../types/errorTypes/ServerError";
 import { CreatedUserData } from "../../../../types/userTypes/UserData";
@@ -15,18 +14,13 @@ export const savingError = {
 const createdUserEmail = "testUser@gmail.com";
 const createdUserUsername = "testuser";
 
-export const mockMongooseError: MongooseError = {
-  name: "MongoServerError",
-  message: `E11000 duplicate key error collection: test.users index: information.username_1 dup key: { information.username: "${createdUserUsername}" }`,
-};
-
 export const expectedDuplicateUsernameError: ControledError =
   new ControledError({
     name: "DUPLICATEKEY",
     message: "Duplicate key/s: Email, Username",
     severety: ErrorSeverety.low,
     statusCode: 400,
-    messageToSend: "Duplicated keys Email, Username",
+    messageToSend: "Duplicated keys: Email, Username",
     extraData: {
       keys: expect.arrayContaining(["Username", "Email"]),
     },

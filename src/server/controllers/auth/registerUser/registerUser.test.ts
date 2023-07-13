@@ -38,7 +38,7 @@ describe("Given registerUser", () => {
       (mockSendEmail as jest.Mock).mockResolvedValue(null);
 
       const next = jest.fn();
-      Users.find = jest.fn().mockResolvedValue(null);
+      Users.find = jest.fn().mockResolvedValue([]);
       Users.create = jest.fn().mockResolvedValue(modifiableCreatedUser);
 
       await registerUser(req, res, next);
@@ -61,7 +61,8 @@ describe("Given registerUser", () => {
       };
 
       (mockSendEmail as jest.Mock).mockResolvedValue(null);
-      Users.find = jest.fn().mockResolvedValue(null);
+
+      Users.find = jest.fn().mockResolvedValue([]);
       Users.create = jest.fn().mockResolvedValue(modifiableCreatedUser);
 
       await registerUser(req, res, null);
@@ -80,7 +81,8 @@ describe("Given registerUser", () => {
       };
 
       (mockSendEmail as jest.Mock).mockResolvedValue(null);
-      Users.find = jest.fn().mockResolvedValue(null);
+
+      Users.find = jest.fn().mockResolvedValue([]);
       Users.create = jest.fn().mockResolvedValue(modifiableCreatedUser);
 
       await registerUser(req, res, null);
@@ -103,7 +105,7 @@ describe("Given registerUser", () => {
       (mockSendEmail as jest.Mock).mockResolvedValue(null);
 
       const next = jest.fn();
-      Users.find = jest.fn().mockResolvedValue(null);
+      Users.find = jest.fn().mockResolvedValue([]);
       Users.create = jest.fn().mockRejectedValue({});
 
       await registerUser(req, res, next);
@@ -155,7 +157,7 @@ describe("Given registerUser", () => {
       (mockSendEmail as jest.Mock).mockRejectedValue(null);
 
       const next = jest.fn();
-      Users.find = jest.fn().mockResolvedValue(null);
+      Users.find = jest.fn().mockResolvedValue([]);
       Users.create = jest.fn().mockResolvedValue(modifiableCreatedUser);
 
       await registerUser(req, res, next);

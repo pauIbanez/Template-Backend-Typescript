@@ -69,13 +69,13 @@ export const expectedInvalidDataError: ResponseError = {
 export const expectedEmailAlreadyInUseError: ResponseError = {
   code: 400,
   error: true,
-  message: "Email is already in use",
+  message: "Duplicated keys: Email",
 };
 
 export const expectedUsernameAlreadyInUseError: ResponseError = {
   code: 400,
   error: true,
-  message: "Username is already in use",
+  message: "Duplicated keys: Username",
 };
 
 export const sucessResponse = {
