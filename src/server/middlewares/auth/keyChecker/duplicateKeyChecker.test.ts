@@ -14,6 +14,7 @@ import {
   expectedDuplicateEmailAndUsernameError,
   correctKeysOnlyUsername,
   correctKeysOnlyEmail,
+  thrownError,
 } from "./duplicateKeyChecker.testObjects";
 
 jest.mock("../../../../database/models/Users");
@@ -154,6 +155,26 @@ describe("Given duplicateKeyChecker", () => {
       await duplicateKeyChecker(null, res, next);
 
       expect(next).toHaveBeenCalledWith(expectedDuplicateEmailAndUsernameError);
+      expect(Users.find).toHaveBeenCalledWith(
+        getQueryFromLocals(repeatUsernameAndEmailLocals)
+      );
+      expect(res.json).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("When it's called and something breaks", () => {
+    test("Then it should call next with the thrown error", async () => {
+      const res: any = {
+        json: jest.fn(),
+        locals: repeatUsernameAndEmailLocals,
+      };
+
+      const next = jest.fn();
+      Users.find = jest.fn().mockRejectedValue(thrownError);
+
+      await duplicateKeyChecker(null, res, next);
+
+      expect(next).toHaveBeenCalledWith(thrownError);
       expect(Users.find).toHaveBeenCalledWith(
         getQueryFromLocals(repeatUsernameAndEmailLocals)
       );

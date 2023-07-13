@@ -115,3 +115,5 @@ export const expectedDuplicateEmailAndUsernameError: ControledError =
       keys: expect.arrayContaining(["Username", "Email"]),
     },
   });
+
+export const thrownError = new Error("something bad");
