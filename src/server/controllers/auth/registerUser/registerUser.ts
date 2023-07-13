@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { MongooseError } from "mongoose";
 import Users from "../../../../database/models/Users";
 import { CreatedUserData } from "../../../../types/userTypes/UserData";
 import sendEmail from "../../../utils/email";
@@ -8,7 +7,10 @@ import EmailData from "../../../utils/email/types";
 import { ActivationTokenPayload } from "../../../../types/authTypes/TokenPayload";
 import { userActivationExpirationInHours } from "../../../../data/serverConfig/server-config";
 import getUserActivationEmail from "../../../utils/email/emailBuilders/userActivationEmail";
-import { getDuplicateKeyRegistrationError } from "../../../../data/errorObjects/userErrors";
+import {
+  DuplicatedKeys,
+  getDuplicateKeyRegistrationError,
+} from "../../../../data/errorObjects/userErrors";
 
 const registerUser = async (
   req: Request,
@@ -17,6 +19,34 @@ const registerUser = async (
 ) => {
   try {
     const newUser: CreatedUserData = req.body; // Get the user data from the req.body
+
+    const usersWithKeysFound = await Users.find({
+      $or: [
+        { "information.email": newUser.information.email },
+        { "information.username": newUser.information.username },
+      ],
+    });
+
+    if (usersWithKeysFound.length) {
+      const duplicatedKeys: DuplicatedKeys = {
+        email: false,
+        username: false,
+      };
+
+      usersWithKeysFound.forEach((userFound) => {
+        if (userFound.information.email === newUser.information.email) {
+          duplicatedKeys.email = true;
+        }
+        if (userFound.information.username === newUser.information.username) {
+          duplicatedKeys.username = true;
+        }
+      });
+
+      const duplicatedKeysError =
+        getDuplicateKeyRegistrationError(duplicatedKeys);
+      next(duplicatedKeysError);
+      return;
+    }
 
     const createdUser = await Users.create(newUser); // Create the user in the Database.
 
@@ -56,20 +86,6 @@ const registerUser = async (
       message: "User registered sucessfully",
     });
   } catch (error) {
-    // Check if the error code is E11000, that means there's a duplicate key
-    if (
-      (error as MongooseError).name &&
-      error.name === "MongoServerError" &&
-      error.message.includes("E11000")
-    ) {
-      const duplicateKeyError = getDuplicateKeyRegistrationError(
-        error as MongooseError,
-        req.body
-      );
-      next(duplicateKeyError);
-      return;
-    }
-
     // If that's not the error simply go next
     next(error);
   }
