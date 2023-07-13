@@ -38,6 +38,12 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
 
     // Replace the req.body with the new user object and go next.
     req.body = newUser;
+
+    // Add the posible duplicate keys to the res.locals
+    res.locals = {
+      email: newUser.information.email,
+      username: newUser.information.username,
+    };
     next();
   } catch (error) {
     next(error); // If anything fails go next with an error.

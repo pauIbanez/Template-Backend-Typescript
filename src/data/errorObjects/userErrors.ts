@@ -84,7 +84,7 @@ export const getDuplicateKeyRegistrationError = (
       ", "
     )}`,
     severety: ErrorSeverety.low,
-    statusCode: 400,
+    statusCode: 409,
     messageToSend: `Duplicated keys: ${getDuplicateKeyNames(
       duplicatedKeys
     ).join(", ")}`,

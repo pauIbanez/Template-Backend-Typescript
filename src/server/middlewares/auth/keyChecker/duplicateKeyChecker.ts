@@ -5,13 +5,13 @@ import {
   getDuplicateKeyRegistrationError,
 } from "../../../../data/errorObjects/userErrors";
 
-const registerUser = async (
+const duplicateKeyChecker = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const { email, username } = res.locals; // Get the keys from the res.locals
+    const { email, username, goNext } = res.locals; // Get the keys from the res.locals
 
     const usersWithKeysFound = await Users.find({
       $or: [
@@ -40,12 +40,17 @@ const registerUser = async (
       next(duplicatedKeysError);
       return;
     }
-
-    next();
+    if (goNext) {
+      next();
+    } else {
+      res.json({
+        message: "No conflicts",
+      });
+    }
   } catch (error) {
     // If that's not the error simply go next
     next(error);
   }
 };
 
-export default registerUser;
+export default duplicateKeyChecker;

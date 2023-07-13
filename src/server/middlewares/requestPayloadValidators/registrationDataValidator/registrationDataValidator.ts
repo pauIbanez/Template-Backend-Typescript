@@ -32,6 +32,8 @@ const registrationDataValidator = (
 
   // If the validation is correct we override the request body with the validated object and go next.
   req.body = value;
+
+  res.locals.goNext = true;
   next();
 };
 
