@@ -9,20 +9,20 @@ import registerUser from "../../controllers/auth/registerUser/registerUser";
 import createUser from "../../middlewares/auth/userCreator/userCreator";
 
 // Router creation
-const router = express.Router();
+const authRouter = express.Router();
 
 // "routerEndpoints" is used here for clarity, you can also directly import "authEndpoints".
 const routerEndpoints = endpoints.auth;
 
 // Router endpoint chain
 
-router.post(routerEndpoints.login, loginDataValidator, login, sendToken);
-router.get(routerEndpoints.refreshToken, tokenValidator, sendToken);
-router.post(
+authRouter.post(routerEndpoints.login, loginDataValidator, login, sendToken);
+authRouter.get(routerEndpoints.refreshToken, tokenValidator, sendToken);
+authRouter.post(
   routerEndpoints.register,
   registrationDataValidator,
   createUser,
   registerUser
 );
 
-export default router;
+export default authRouter;

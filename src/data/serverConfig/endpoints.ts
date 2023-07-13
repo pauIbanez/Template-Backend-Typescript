@@ -3,13 +3,20 @@
 */
 
 export const authEndpoints = <const>{
-  prev: "/auth",
+  path: "/auth",
   login: "/login",
   register: "/register",
   refreshToken: "/refreshToken",
 };
 
+export const userEndpoints = <const>{
+  path: "/users",
+  myUser: "/myUser",
+  getUser: "/user/:userId",
+};
+
 // This is the root router containing all other routers
 export const endpoints = <const>{
   auth: authEndpoints,
+  users: userEndpoints,
 };
