@@ -1,5 +1,3 @@
-import ControledError from "../../../../data/errorObjects/ControledError";
-import { ErrorSeverety } from "../../../../types/errorTypes/ServerError";
 import { CreatedUserData } from "../../../../types/userTypes/UserData";
 import EmailData from "../../../utils/email/types";
 
@@ -13,18 +11,6 @@ export const savingError = {
 
 const createdUserEmail = "testUser@gmail.com";
 const createdUserUsername = "testuser";
-
-export const expectedDuplicateUsernameError: ControledError =
-  new ControledError({
-    name: "DUPLICATEKEY",
-    message: "Duplicate key/s: Email, Username",
-    severety: ErrorSeverety.low,
-    statusCode: 400,
-    messageToSend: "Duplicated keys: Email, Username",
-    extraData: {
-      keys: expect.arrayContaining(["Username", "Email"]),
-    },
-  });
 
 export const newUserTest: CreatedUserData = {
   information: {
