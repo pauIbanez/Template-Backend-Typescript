@@ -28,6 +28,16 @@ export const repeatUsernameLocals = {
   goNext: false,
 };
 
+export const correctKeysOnlyUsername = {
+  username: "asadasda",
+  goNext: false,
+};
+
+export const correctKeysOnlyEmail = {
+  email: "asdasdas@email.com",
+  goNext: false,
+};
+
 export const repeatUsernameAndEmailLocals = {
   email: repeatedEmail,
   username: repeatedUsername,
@@ -38,10 +48,13 @@ export const getQueryFromLocals = ({
   email,
   username,
 }: {
-  email: string;
-  username: string;
+  email?: string;
+  username?: string;
 }) => ({
-  $or: [{ "information.email": email }, { "information.username": username }],
+  $or: [
+    { "information.email": email || "" },
+    { "information.username": username || "" },
+  ],
 });
 
 export const getTestUsers = () => [

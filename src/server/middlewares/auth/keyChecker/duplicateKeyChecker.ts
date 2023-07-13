@@ -15,8 +15,8 @@ const duplicateKeyChecker = async (
 
     const usersWithKeysFound = await Users.find({
       $or: [
-        { "information.email": email },
-        { "information.username": username },
+        { "information.email": email || "" },
+        { "information.username": username || "" },
       ],
     });
 

@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { getInvalidKeyCheckData } from "../../../../data/errorObjects/dataValidationErrors";
-import getUserData from "../../../../data/joiObjects/getUserData";
+import keyCheckerData from "../../../../data/joiObjects/keyCheckerData";
 
 const keyCheckerDataValidator = (
   req: Request,
@@ -15,7 +15,10 @@ const keyCheckerDataValidator = (
   };
 
   // Use the registrationData Joi object to validate the request body. (This object is found in data/JoiObjects)
-  const { error, value } = getUserData.validate(req.body, joiValidationOptions);
+  const { error, value } = keyCheckerData.validate(
+    req.body,
+    joiValidationOptions
+  );
 
   // If the validation fails write an error and go next.
   if (error) {

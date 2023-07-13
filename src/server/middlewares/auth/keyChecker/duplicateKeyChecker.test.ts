@@ -12,6 +12,8 @@ import {
   expectedDuplicateUsernameError,
   repeatUsernameAndEmailLocals,
   expectedDuplicateEmailAndUsernameError,
+  correctKeysOnlyUsername,
+  correctKeysOnlyEmail,
 } from "./duplicateKeyChecker.testObjects";
 
 jest.mock("../../../../database/models/Users");
@@ -55,6 +57,46 @@ describe("Given duplicateKeyChecker", () => {
       expect(next).not.toHaveBeenCalled();
       expect(Users.find).toHaveBeenCalledWith(
         getQueryFromLocals(correctLocalsGoNext)
+      );
+      expect(res.json).toHaveBeenCalledWith(expectedResponse);
+    });
+  });
+
+  describe("When it's called with only username and everything ok with goNext as false", () => {
+    test("Then it should call res.json and not next", async () => {
+      const res: any = {
+        json: jest.fn(),
+        locals: correctKeysOnlyUsername,
+      };
+
+      const next = jest.fn();
+      Users.find = jest.fn().mockResolvedValue([]);
+
+      await duplicateKeyChecker(null, res, next);
+
+      expect(next).not.toHaveBeenCalled();
+      expect(Users.find).toHaveBeenCalledWith(
+        getQueryFromLocals(correctKeysOnlyUsername)
+      );
+      expect(res.json).toHaveBeenCalledWith(expectedResponse);
+    });
+  });
+
+  describe("When it's called with only email and everything ok with goNext as false", () => {
+    test("Then it should call res.json and not next", async () => {
+      const res: any = {
+        json: jest.fn(),
+        locals: correctKeysOnlyEmail,
+      };
+
+      const next = jest.fn();
+      Users.find = jest.fn().mockResolvedValue([]);
+
+      await duplicateKeyChecker(null, res, next);
+
+      expect(next).not.toHaveBeenCalled();
+      expect(Users.find).toHaveBeenCalledWith(
+        getQueryFromLocals(correctKeysOnlyEmail)
       );
       expect(res.json).toHaveBeenCalledWith(expectedResponse);
     });
