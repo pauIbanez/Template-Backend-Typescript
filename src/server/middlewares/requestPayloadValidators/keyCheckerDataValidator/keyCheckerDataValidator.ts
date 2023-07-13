@@ -28,6 +28,7 @@ const keyCheckerDataValidator = (
 
   // If the validation is correct we put the validated Id in the res.locals
   res.locals = value;
+  res.locals.goNext = false;
   next();
 };
 

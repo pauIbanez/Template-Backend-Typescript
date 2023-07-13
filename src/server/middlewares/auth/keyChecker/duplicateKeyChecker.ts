@@ -42,11 +42,12 @@ const duplicateKeyChecker = async (
     }
     if (goNext) {
       next();
-    } else {
-      res.json({
-        message: "No conflicts",
-      });
+      return;
     }
+
+    res.json({
+      message: "No conflicts",
+    });
   } catch (error) {
     // If that's not the error simply go next
     next(error);

@@ -43,6 +43,7 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
     res.locals = {
       email: newUser.information.email,
       username: newUser.information.username,
+      goNext: true,
     };
     next();
   } catch (error) {

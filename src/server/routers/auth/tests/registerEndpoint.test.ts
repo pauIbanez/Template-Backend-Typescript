@@ -62,7 +62,7 @@ describe("Given /auth/register endpoint", () => {
       const { body } = await request(app)
         .post(requestPath)
         .send(alreadyCreatedForEmailRegistrationData)
-        .expect(400);
+        .expect(409);
 
       expect(body).toEqual(expectedEmailAlreadyInUseError);
     });
@@ -74,7 +74,7 @@ describe("Given /auth/register endpoint", () => {
       const { body } = await request(app)
         .post(requestPath)
         .send(alreadyInUseUsernameRegistrationData)
-        .expect(400);
+        .expect(409);
 
       expect(body).toEqual(expectedUsernameAlreadyInUseError);
     });
