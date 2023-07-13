@@ -53,6 +53,18 @@ export const getNotYetActivatedError = (userId: string): ControledError =>
     },
   });
 
+export const getAlreadyActivatedError = (userId: string): ControledError =>
+  new ControledError({
+    name: "ALREADYACTIVEUSER",
+    message: "User is already active",
+    statusCode: 400,
+    messageToSend: "This user already active",
+    severety: ErrorSeverety.low,
+    extraData: {
+      userId,
+    },
+  });
+
 export const getInvalidPasswordError = (userId: string): ControledError =>
   new ControledError({
     name: "BADAUTH",
