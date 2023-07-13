@@ -8,6 +8,7 @@ export const authEndpoints = <const>{
   register: "/register",
   refreshToken: "/refreshToken",
   checkKeys: "/checkKeys",
+  verifyUser: "/verify/:verificationToken",
 };
 
 export const userEndpoints = <const>{
