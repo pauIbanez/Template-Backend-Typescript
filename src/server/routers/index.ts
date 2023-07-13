@@ -1,8 +1,11 @@
 import express from "express";
-import authenticationRouter from "./auth/index";
+import { endpoints } from "../../data/serverConfig/endpoints";
+import authRouter from "./auth";
+import usersRouter from "./users";
 
 const mainRouter = express.Router();
 
-mainRouter.use("/auth", authenticationRouter);
+mainRouter.use(endpoints.auth.path, authRouter);
+mainRouter.use(endpoints.users.path, usersRouter);
 
 export default mainRouter;

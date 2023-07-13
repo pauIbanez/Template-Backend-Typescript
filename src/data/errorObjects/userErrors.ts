@@ -19,10 +19,10 @@ export const getUserNotFoundForUsernameOrEmailError = (
     },
   });
 
-export const getUserNotFoundError = (userId: string): ControledError =>
+export const getUserNotFoundForIdError = (userId: string): ControledError =>
   new ControledError({
     name: "MISSINGUSER",
-    message: "User not found",
+    message: "User not found for Id",
     statusCode: 404,
     messageToSend: "User not found",
     severety: ErrorSeverety.low,
