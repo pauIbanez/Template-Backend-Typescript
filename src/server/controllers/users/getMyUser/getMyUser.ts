@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-import Users from "../../../database/models/Users";
-import { getUserNotFoundForIdError } from "../../../data/errorObjects/userErrors";
+import Users from "../../../../database/models/Users";
+import { getUserNotFoundForIdError } from "../../../../data/errorObjects/userErrors";
 
 const getMyUser = async (req: Request, res: Response, next: NextFunction) => {
   const myUserId = res.locals.userId;

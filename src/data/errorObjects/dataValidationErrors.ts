@@ -119,3 +119,17 @@ export const getInvalidLoginDataError = (details: string[]): ControledError =>
       errors: buildInvalidLoginMessage(details),
     },
   });
+
+export const getInvalidGetUserDataError = (
+  messages: string[]
+): ControledError =>
+  new ControledError({
+    name: "INVALIDGETUSERDATA",
+    message: "Invalid get user data payload",
+    statusCode: 400,
+    messageToSend: `Invalid data: ${messages.join(", ")}`,
+    severety: ErrorSeverety.low,
+    extraData: {
+      errors: messages.join(", "),
+    },
+  });

@@ -12,7 +12,7 @@ export const authEndpoints = <const>{
 export const userEndpoints = <const>{
   path: "/users",
   myUser: "/myUser",
-  getUser: "/getUser",
+  getUser: "/user/:userId",
 };
 
 // This is the root router containing all other routers
