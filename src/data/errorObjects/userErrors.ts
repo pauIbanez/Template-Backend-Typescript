@@ -71,10 +71,8 @@ const getDuplicateKey = (message: string): string => {
   if (message.includes("username")) {
     return "Username";
   }
-  if (message.includes("email")) {
-    return "Email";
-  }
-  return message;
+
+  return "Email";
 };
 
 export const getDuplicateKeyRegistrationError = (
@@ -89,10 +87,10 @@ export const getDuplicateKeyRegistrationError = (
     messageToSend: `${
       error.message.includes("username") ? "Username is already in use" : ""
     }${error.message.includes("email") ? "Email is already in use" : ""}`,
-    extraData: {
-      duplicatedKey:
-        getDuplicateKey(error.message) === "Username"
-          ? registrarionData!.information.username
-          : registrarionData!.information.email,
-    },
+    extraData: (() => {
+      if (getDuplicateKey(error.message) === "Username") {
+        return { username: registrarionData!.information.username };
+      }
+      return { email: registrarionData!.information.email };
+    })(),
   });
