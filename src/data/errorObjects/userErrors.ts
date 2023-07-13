@@ -1,9 +1,7 @@
 /* eslint-disable import/prefer-default-export */
 
-import { MongooseError } from "mongoose";
 import { ErrorSeverety } from "../../types/errorTypes/ServerError";
 import ControledError from "./ControledError";
-import { CreatedUserData } from "../../types/userTypes/UserData";
 
 export const getUserNotFoundForUsernameOrEmailError = (
   email: string
@@ -67,30 +65,30 @@ export const getInvalidPasswordError = (userId: string): ControledError =>
     },
   });
 
-const getDuplicateKey = (message: string): string => {
-  if (message.includes("username")) {
-    return "Username";
-  }
+export interface DuplicatedKeys {
+  email: boolean;
+  username: boolean;
+}
 
-  return "Email";
-};
+const getDuplicateKeyNames = (duplicatedKeys: DuplicatedKeys): string[] =>
+  Object.entries(duplicatedKeys)
+    .filter(([, value]) => value)
+    .map(([key]) => key.charAt(0).toUpperCase() + key.slice(1));
 
 export const getDuplicateKeyRegistrationError = (
-  error: MongooseError,
-  registrarionData: CreatedUserData
+  duplicatedKeys: DuplicatedKeys
 ): ControledError =>
   new ControledError({
     name: "DUPLICATEKEY",
-    message: `Duplicate key/s: ${getDuplicateKey(error.message)}`,
+    message: `Duplicate key/s: ${getDuplicateKeyNames(duplicatedKeys).join(
+      ", "
+    )}`,
     severety: ErrorSeverety.low,
     statusCode: 400,
-    messageToSend: `${
-      error.message.includes("username") ? "Username is already in use" : ""
-    }${error.message.includes("email") ? "Email is already in use" : ""}`,
-    extraData: (() => {
-      if (getDuplicateKey(error.message) === "Username") {
-        return { username: registrarionData.information.username };
-      }
-      return { email: registrarionData.information.email };
-    })(),
+    messageToSend: `Duplicated keys ${getDuplicateKeyNames(duplicatedKeys).join(
+      ", "
+    )}`,
+    extraData: {
+      keys: getDuplicateKeyNames(duplicatedKeys),
+    },
   });
