@@ -5,7 +5,7 @@ import tokenValidator from "../../middlewares/auth/tokenValidator/tokenValidator
 import loginDataValidator from "../../middlewares/requestPayloadValidators/loginDataValidator/loginDataValidator";
 import { endpoints } from "../../../data/serverConfig/endpoints";
 import registrationDataValidator from "../../middlewares/requestPayloadValidators/registrationDataValidator/registrationDataValidator";
-import registerUser from "../../controllers/auth/registerUser/registerUser";
+import registerUser from "../../middlewares/auth/registerUser/registerUser";
 import createUser from "../../middlewares/auth/userCreator/userCreator";
 import duplicateKeyChecker from "../../middlewares/auth/keyChecker/duplicateKeyChecker";
 import keyCheckerDataValidator from "../../middlewares/requestPayloadValidators/keyCheckerDataValidator/keyCheckerDataValidator";
