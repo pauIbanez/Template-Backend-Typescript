@@ -20,11 +20,12 @@ const sendVerificationEmail = async (
   try {
     const { registration } = res.locals;
     const { userId } = res.locals;
+    const { user: registeredUser } = res.locals;
 
     let user;
 
     if (registration) {
-      user = res.locals.createdUser;
+      user = registeredUser;
     } else {
       try {
         const foundUser = await Users.findById(userId);
@@ -63,6 +64,7 @@ const sendVerificationEmail = async (
     // Create the emailData object for the mail function.
     const emailData: EmailData = {
       html: getUserVerificationEmail(verificationToken),
+      amp: getUserVerificationEmail(verificationToken),
       internalEmailName: "User Activation email",
       subject: `Hey ${user.information.username}! Activate your account!`,
       to: user.information.email,
@@ -84,12 +86,16 @@ const sendVerificationEmail = async (
     const responses = {
       registration: {
         code: 201,
-        message: "User registered sucessfully!",
-        verificationTokenEmailSent: emailCorrectlySent,
+        content: {
+          message: "User registered sucessfully!",
+          verificationTokenEmailSent: emailCorrectlySent,
+        },
       },
       noRegistration: {
         code: 200,
-        message: "Verification email sent!",
+        content: {
+          message: "Verification email sent!",
+        },
       },
     };
 
@@ -97,9 +103,7 @@ const sendVerificationEmail = async (
       ? responses.registration
       : responses.noRegistration;
 
-    res.status(response.code).json({
-      message: response.message,
-    });
+    res.status(response.code).json(response.content);
   } catch (error) {
     // If that's not the error simply go next
     next(error);

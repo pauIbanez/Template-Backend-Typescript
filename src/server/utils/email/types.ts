@@ -1,7 +1,8 @@
 interface EmailData {
+  html: string;
   subject: string;
   to: string;
-  html: string;
+  amp: string;
   internalEmailName: string;
 }
 

@@ -29,6 +29,7 @@ const sendEmail = (emailData: EmailData): Promise<void> =>
             `Error while sending ${emailData.internalEmailName} email to ${emailToSend.to}`
           )
         );
+        debugToConsole(chalk.whiteBright(error.message));
         return;
       }
       resolve();
