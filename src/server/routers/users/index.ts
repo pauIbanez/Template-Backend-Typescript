@@ -3,7 +3,7 @@ import { endpoints } from "../../../data/serverConfig/endpoints";
 import tokenValidator from "../../middlewares/auth/tokenValidator/tokenValidator";
 import getMyUser from "../../controllers/users/getMyUser/getMyUser";
 import getUser from "../../controllers/users/getUser/getUser";
-import getUserDataValidator from "../../middlewares/requestPayloadValidators/getUserDataValidator/getUserDataValidator";
+import userIdDataValidator from "../../middlewares/requestPayloadValidators/userIdDataValidator/userIdDataValidator";
 
 // Router creation
 const usersRouter = express.Router();
@@ -16,6 +16,6 @@ const routerEndpoints = endpoints.users;
 // This router is completley protected
 usersRouter.use(tokenValidator);
 usersRouter.get(routerEndpoints.myUser, getMyUser);
-usersRouter.get(routerEndpoints.getUser, getUserDataValidator, getUser);
+usersRouter.get(routerEndpoints.getUser, userIdDataValidator, getUser);
 
 export default usersRouter;

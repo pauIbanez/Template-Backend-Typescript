@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { getInvalidGetUserDataError } from "../../../../data/errorObjects/dataValidationErrors";
-import getUserData from "../../../../data/joiObjects/getUserData";
+import userIdData from "../../../../data/joiObjects/userIdData";
 
-const getUserDataValidator = (
+const userIdDataValidator = (
   req: Request,
   res: Response,
   next: NextFunction
@@ -15,7 +15,7 @@ const getUserDataValidator = (
   };
 
   // Use the registrationData Joi object to validate the request body. (This object is found in data/JoiObjects)
-  const { error, value } = getUserData.validate(
+  const { error, value } = userIdData.validate(
     req.params,
     joiValidationOptions
   );
@@ -34,4 +34,4 @@ const getUserDataValidator = (
   next();
 };
 
-export default getUserDataValidator;
+export default userIdDataValidator;
