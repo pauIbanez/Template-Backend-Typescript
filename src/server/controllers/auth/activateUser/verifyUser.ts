@@ -50,7 +50,7 @@ const verifyUser = async (req: Request, res: Response, next: NextFunction) => {
     foundUser.save();
 
     res.status(200).json({
-      message: "User verificated!",
+      message: "User verified!",
     });
   } catch (error) {
     // If that's not the error simply go next
