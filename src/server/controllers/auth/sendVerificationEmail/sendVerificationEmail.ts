@@ -68,6 +68,8 @@ const sendVerificationEmail = async (
       to: user.information.email,
     };
 
+    let emailCorrectlySent = true;
+
     try {
       await sendEmail(emailData);
     } catch (err) {
@@ -76,12 +78,14 @@ const sendVerificationEmail = async (
         next(emailFailedToSendError);
         return;
       }
+      emailCorrectlySent = false;
     }
 
     const responses = {
       registration: {
         code: 201,
         message: "User registered sucessfully!",
+        verificationTokenEmailSent: emailCorrectlySent,
       },
       noRegistration: {
         code: 200,
