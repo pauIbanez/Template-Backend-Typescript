@@ -15,7 +15,7 @@ const sendVerificationEmail = async (
 ) => {
   try {
     const { registration } = res.locals;
-    const { userId } = req.body;
+    const { userId } = res.locals;
 
     let user;
 
