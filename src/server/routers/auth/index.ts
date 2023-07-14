@@ -10,6 +10,8 @@ import createUser from "../../middlewares/auth/userCreator/userCreator";
 import duplicateKeyChecker from "../../middlewares/auth/keyChecker/duplicateKeyChecker";
 import keyCheckerDataValidator from "../../middlewares/requestPayloadValidators/keyCheckerDataValidator/keyCheckerDataValidator";
 import verifyUser from "../../controllers/auth/verifyUser/verifyUser";
+import sendVerificationEmail from "../../controllers/auth/sendVerificationEmail/sendVerificationEmail";
+import userIdDataValidator from "../../middlewares/requestPayloadValidators/userIdDataValidator/userIdDataValidator";
 
 // Router creation
 const authRouter = express.Router();
@@ -26,7 +28,8 @@ authRouter.post(
   registrationDataValidator,
   createUser,
   duplicateKeyChecker,
-  registerUser
+  registerUser,
+  sendVerificationEmail
 );
 
 authRouter.post(
@@ -36,5 +39,10 @@ authRouter.post(
 );
 
 authRouter.get(routerEndpoints.verifyUser, verifyUser);
+authRouter.get(
+  routerEndpoints.sendVerificationEmail,
+  userIdDataValidator,
+  sendVerificationEmail
+);
 
 export default authRouter;

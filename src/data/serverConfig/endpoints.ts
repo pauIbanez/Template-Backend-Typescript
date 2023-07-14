@@ -9,7 +9,7 @@ export const authEndpoints = <const>{
   refreshToken: "/refreshToken",
   checkKeys: "/checkKeys",
   verifyUser: "/verify/:verificationToken",
-  sendVerificationEmail: "/sendEmail:userId",
+  sendVerificationEmail: "/sendEmail/:userId",
 };
 
 export const userEndpoints = <const>{
