@@ -10,6 +10,7 @@ import {
 } from "../../../../data/errorObjects/userErrors";
 import { ActivationTokenPayload } from "../../../../types/authTypes/TokenPayload";
 import { userActivationExpirationInHours } from "../../../../data/serverConfig/server-config";
+import { getFailToSendVerificationEmailError } from "../../../../data/errorObjects/authErrors";
 
 const sendVerificationEmail = async (
   req: Request,
@@ -50,18 +51,10 @@ const sendVerificationEmail = async (
       id: user.id,
     };
 
-    let verificationToken;
-
-    try {
-      // Create the token with the created payload.
-      verificationToken = jwt.sign(tokenData, process.env.TOKEN_SECRET, {
-        expiresIn: `${userActivationExpirationInHours}h`,
-      });
-    } catch (tokenError) {
-      const extensiveError = { ...tokenError };
-      extensiveError.regard = "Token";
-      throw extensiveError;
-    }
+    // Create the token with the created payload.
+    const verificationToken = jwt.sign(tokenData, process.env.TOKEN_SECRET, {
+      expiresIn: `${userActivationExpirationInHours}h`,
+    });
 
     // Add the verificationToken to the created user and save it.
     user.verificationToken = verificationToken;
@@ -77,10 +70,12 @@ const sendVerificationEmail = async (
 
     try {
       await sendEmail(emailData);
-    } catch (emailError) {
-      const extensiveError = { ...emailError };
-      extensiveError.regard = "Email";
-      throw extensiveError;
+    } catch (err) {
+      if (!registration) {
+        const emailFailedToSendError = getFailToSendVerificationEmailError(err);
+        next(emailFailedToSendError);
+        return;
+      }
     }
 
     const responses = {

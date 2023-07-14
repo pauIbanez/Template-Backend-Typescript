@@ -27,3 +27,17 @@ export const getInvalidVerificationTokenError = (): ControledError =>
     messageToSend: "The token is invalid or expired",
     severety: ErrorSeverety.low,
   });
+
+export const getFailToSendVerificationEmailError = (
+  errorData: any
+): ControledError =>
+  new ControledError({
+    name: "VERIFICATIONEMAILFAIL",
+    message: "Could not send verification email",
+    statusCode: 500,
+    messageToSend: "Verifcation email failed to send",
+    severety: ErrorSeverety.low,
+    extraData: {
+      errorData,
+    },
+  });
