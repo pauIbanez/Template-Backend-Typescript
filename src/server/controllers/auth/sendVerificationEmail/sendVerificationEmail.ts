@@ -1,10 +1,13 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import EmailData from "../../../utils/email/types";
-import getUserVerificationEmail from "../../../utils/email/emailBuilders/userActivationEmail";
+import getUserVerificationEmail from "../../../utils/email/emailBuilders/userVerificationEmail";
 import sendEmail from "../../../utils/email";
 import Users from "../../../../database/models/Users";
-import { getUserNotFoundForIdError } from "../../../../data/errorObjects/userErrors";
+import {
+  getAlreadyActivatedError,
+  getUserNotFoundForIdError,
+} from "../../../../data/errorObjects/userErrors";
 import { ActivationTokenPayload } from "../../../../types/authTypes/TokenPayload";
 import { userActivationExpirationInHours } from "../../../../data/serverConfig/server-config";
 
@@ -27,6 +30,12 @@ const sendVerificationEmail = async (
         if (!foundUser) {
           const userNotFoundError = getUserNotFoundForIdError(userId);
           next(userNotFoundError);
+          return;
+        }
+
+        if (!foundUser.verificationToken) {
+          const userAlreadyActiveError = getAlreadyActivatedError(userId);
+          next(userAlreadyActiveError);
           return;
         }
 
