@@ -9,7 +9,7 @@ import registerUser from "../../controllers/auth/registerUser/registerUser";
 import createUser from "../../middlewares/auth/userCreator/userCreator";
 import duplicateKeyChecker from "../../middlewares/auth/keyChecker/duplicateKeyChecker";
 import keyCheckerDataValidator from "../../middlewares/requestPayloadValidators/keyCheckerDataValidator/keyCheckerDataValidator";
-import verifyUser from "../../controllers/auth/activateUser/verifyUser";
+import verifyUser from "../../controllers/auth/verifyUser/verifyUser";
 
 // Router creation
 const authRouter = express.Router();
